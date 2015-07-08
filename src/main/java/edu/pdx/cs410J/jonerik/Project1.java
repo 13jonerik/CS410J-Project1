@@ -26,6 +26,15 @@ public class Project1 {
         System.exit(0);
     }
 
+    /**
+     * checkNumArgs is designed to take the command line arguments and 
+     * check to make sure that a valid number of arguments are passed.
+     * There are 5 required args and two optional args, however dates
+     * are not considered one arg in the command line, they are two.
+     * So for this check the range of acceptable CL args is 7 - 9. 
+     * If 0 args are passed, or the arguments are less than 7 or greater
+     * than 9, the program prints an error and exits with 1. 
+     * /
     private static void checkNumArgs (ArrayList args) {
 
         if (args.size() == 0) {
@@ -63,7 +72,6 @@ public class Project1 {
             }
 
     }
-
 
     /**
      * validateCall is the important implementation for project 1.
