@@ -151,6 +151,14 @@ public class Project1 {
     }
 
 
+
+    /**
+     * printCall function turns the ArrayList of command line
+     * args back into strings and fixes the startTime and 
+     * endTime string into a correctly formed date. Then the 
+     * function creates a phoneCall and calls the toString() 
+     * method in the PhoneCall class to print info to console. 
+     */
     private static void printCall(ArrayList callInfo){
         //System.out.println("\nCall from " + callInfo.get(1) + " at " + callInfo.get(2) + "\n" +
         //                            "Received by " + callInfo.get(3) + "\n" +
