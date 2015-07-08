@@ -46,32 +46,41 @@ public class Project1 {
 
 
     private static void checkForOptional(ArrayList args) {
-        String first = (String) args.get(0);
-        if (first.startsWith("-")) {
+//        String first = (String) args.get(0);
+//        if (first.startsWith("-")) {
             if (args.contains("-README")) {
                 readMe();
                 System.exit(0);
-            } else if (first.equals("-print")) {
-                printCall(args);
-                System.exit(0);
-            } else {
-                exitWithError();
-
+            } else if (args.contains("-print")) {
+                //check this to make print method work
+                args.remove(args.indexOf("-print"));
+                if (validateCall(args)) {
+                    printCall(args);
+                    System.exit(0);
+                }
+           // } else {
+                //exitWithError();
             }
-        }
+
     }
 
 
-    private static void validateCall(ArrayList callInfo){
+    /**
+     * validateCall is the important implementation for project 1.
+     * This function takes the ArrayList of the command line args
+     * and casts the arguments back into strings to be compared to
+     * regular expressions. The startTime and endTime args are also
+     * concatenated here. The function has a 5 clause if-statement
+     * that checks each arg to the expected regular expression,
+     * and throws an error if not.
+     */
+    private static boolean validateCall(ArrayList callInfo){
 
         String customer     = (String) callInfo.get(0);
         String callerNumber = (String) callInfo.get(1);
         String calleeNumber = (String) callInfo.get(2);
         String startTime    = callInfo.get(3) + " " + callInfo.get(4);
         String endTime      = callInfo.get(5) + " " + callInfo.get(6);
-
-        System.out.println(startTime);
-        System.out.println(endTime);
 
         if (!customer.matches("[a-zA-Z\\s*'-]+")) {         // "[\"][a-zA-Z]+[\"]"
             System.err.println("Customer Name Invalid");
@@ -89,9 +98,19 @@ public class Project1 {
             System.err.println("End Time Invalid");
             System.exit(1);
         }
+
+        return true;
+
     }
 
 
+    /**
+     * This function is responsible for printing the README text to the console.
+     * Could later move to an external file, but for simplicity its written locally.
+     * The function displays the current project version and the current date. This
+     * function is called in the checkForOptional function when -README is passed
+     * from the command line.
+     */
     private static void readMe(){
 
         DateFormat currDate = new SimpleDateFormat("MM/dd/yyyy");
@@ -118,9 +137,22 @@ public class Project1 {
 
 
     private static void printCall(ArrayList callInfo){
-        System.out.println("\nCall from " + callInfo.get(1) + " at " + callInfo.get(2) + "\n" +
-                                    "Received by " + callInfo.get(3) + "\n" +
-                                    "Duration: " + callInfo.get(4) + " - " + callInfo.get(5) + "\n");
+        //System.out.println("\nCall from " + callInfo.get(1) + " at " + callInfo.get(2) + "\n" +
+        //                            "Received by " + callInfo.get(3) + "\n" +
+        //                            "Duration: " + callInfo.get(4) + " - " + callInfo.get(5) + "\n");
+
+
+        String customer     = (String) callInfo.get(0);
+        String callerNumber = (String) callInfo.get(1);
+        String calleeNumber = (String) callInfo.get(2);
+        String startTime    = callInfo.get(3) + " " + callInfo.get(4);
+        String endTime      = callInfo.get(5) + " " + callInfo.get(6);
+
+        PhoneCall firstCall = new PhoneCall(customer, callerNumber, calleeNumber,
+                startTime, endTime);
+
+        System.out.println(firstCall.toString());
+
     }
 
 

@@ -10,37 +10,33 @@ import java.util.Date;
 public class PhoneCall extends AbstractPhoneCall{
 
 
-    private String callerName;
+    private String customer;
     private String callerNumber;
-    private String startTime;
-
-    private String calleeName;
     private String calleeNumber;
+    private String startTime;
     private String endTime;
 
     public PhoneCall(){
         super();
     }
 
-    public PhoneCall(String callName, String callNumber, String callTime, String answerName,
-                     String answerNumber, String answerTime) {
+    public PhoneCall(String customer, String callerNumber, String calleeNumber,
+                     String callTime, String endTime) {
 
-        this.callerName     = callName;
-        this.callerNumber   = callNumber;
+        this.customer     = customer;
+        this.callerNumber   = callerNumber;
+        this.calleeNumber   = calleeNumber;
         this.startTime      = callTime;
-
-        this.calleeName     = answerName;
-        this.calleeNumber   = answerNumber;
-        this.endTime        = answerTime;
+        this.endTime        = endTime;
 
     }
 
     public String getCaller() {
-        return callerName;
+        return callerNumber;
     }
 
     public String getCallee() {
-        return calleeName;
+        return calleeNumber;
     }
 
     public Date getStartTime() {
