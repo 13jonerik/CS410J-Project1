@@ -34,7 +34,7 @@ public class Project1 {
      * So for this check the range of acceptable CL args is 7 - 9. 
      * If 0 args are passed, or the arguments are less than 7 or greater
      * than 9, the program prints an error and exits with 1. 
-     * /
+     */
     private static void checkNumArgs (ArrayList args) {
 
         if (args.size() == 0) {
