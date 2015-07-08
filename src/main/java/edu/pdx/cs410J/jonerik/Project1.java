@@ -17,23 +17,30 @@ public class Project1 {
     public static void main(String[] args) {
         Class c = AbstractPhoneBill.class;  // Refer to one of Dave's classes so that we can be sure it is on the classpath
 
-
         ArrayList<String> arguments = new ArrayList<String>(Arrays.asList(args));
+
         checkNumArgs(arguments);
         checkForOptional(arguments);
         validateCall(arguments);
 
-
-        for (String arg : args) {
-            System.out.println(arg);
-        }
-        System.exit(1);
+        System.exit(0);
     }
 
     private static void checkNumArgs (ArrayList args) {
-        if (args.size() < 5 || args.size() > 7) {
-            exitWithError();
-            System.exit(0);
+
+        if (args.size() == 0) {
+            System.err.println("Missing command line arguments");
+            System.exit(1);
+        }
+
+        if (args.size() < 7) {
+            System.err.println("Missing command line arguments");
+            System.exit(1);
+        }
+
+        if( args.size() > 9) {
+            System.err.println("Too many command line arguments");
+            System.exit(1);
         }
     }
 
@@ -43,14 +50,44 @@ public class Project1 {
         if (first.startsWith("-")) {
             if (args.contains("-README")) {
                 readMe();
-                System.exit(1);
+                System.exit(0);
             } else if (first.equals("-print")) {
                 printCall(args);
-                System.exit(1);
+                System.exit(0);
             } else {
                 exitWithError();
-                System.exit(0);
+
             }
+        }
+    }
+
+
+    private static void validateCall(ArrayList callInfo){
+
+        String customer     = (String) callInfo.get(0);
+        String callerNumber = (String) callInfo.get(1);
+        String calleeNumber = (String) callInfo.get(2);
+        String startTime    = callInfo.get(3) + " " + callInfo.get(4);
+        String endTime      = callInfo.get(5) + " " + callInfo.get(6);
+
+        System.out.println(startTime);
+        System.out.println(endTime);
+
+        if (!customer.matches("[a-zA-Z\\s*'-]+")) {         // "[\"][a-zA-Z]+[\"]"
+            System.err.println("Customer Name Invalid");
+            System.exit(1);
+        } else if (!callerNumber.matches("[0-9]{3}[-][0-9]{3}[-][0-9]{4}")) {
+            System.err.println("Caller Number Invalid");
+            System.exit(1);
+        } else if (!calleeNumber.matches("[0-9]{3}[-][0-9]{3}[-][0-9]{4}")) {
+            System.err.println("Callee Number Invalid");
+            System.exit(1);
+        } else if (!startTime.matches("[0-3][0-9]{0,1}[/][0-9][0-9]{0,1}[/][0-9]{4}[\\s*][0-9][0-9]{0,1}[:][0-5][0-9]")) {
+            System.err.println("Start Time Invalid");
+            System.exit(1);
+        } else if (!endTime.matches("[0-3][0-9]{0,1}[/][0-9][0-9]{0,1}[/][0-9]{4}[\\s*][0-9][0-9]{0,1}[:][0-5][0-9]")) {
+            System.err.println("End Time Invalid");
+            System.exit(1);
         }
     }
 
@@ -79,6 +116,7 @@ public class Project1 {
 
     }
 
+
     private static void printCall(ArrayList callInfo){
         System.out.println("\nCall from " + callInfo.get(1) + " at " + callInfo.get(2) + "\n" +
                                     "Received by " + callInfo.get(3) + "\n" +
@@ -86,31 +124,10 @@ public class Project1 {
     }
 
 
-    private static void validateCall(ArrayList callInfo){
-        String customer = (String) callInfo.get(0);
-        System.out.println(customer);
-
-        if (customer.matches("[a-zA-Z\\s*'-]+")){         // "[\"][a-zA-Z]+[\"]"
-            System.out.println("SUCCESS");
-
-        }
-
-
-
-    }
-
-
-
-
-
-
-
     private static void exitWithError(){
         System.err.println("Missing command line arguments");
+        System.exit(1);
     }
-
-
-
 
 
 

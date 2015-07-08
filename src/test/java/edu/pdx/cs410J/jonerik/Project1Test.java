@@ -21,7 +21,7 @@ public class Project1Test extends InvokeMainTestCase {
   /**
    * Tests that invoking the main method with no arguments issues an error
    */
-  @Ignore
+
   @Test
   public void testNoCommandLineArguments() {
     MainMethodResult result = invokeMain();

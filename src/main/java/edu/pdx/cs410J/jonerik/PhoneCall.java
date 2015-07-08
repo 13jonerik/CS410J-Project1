@@ -19,15 +19,15 @@ public class PhoneCall extends AbstractPhoneCall{
     private String endTime;
 
     public PhoneCall(){
-
+        super();
     }
 
-    public PhoneCall(String callName1, String callNumber1, String callTime1, String answerName,
+    public PhoneCall(String callName, String callNumber, String callTime, String answerName,
                      String answerNumber, String answerTime) {
 
-        this.callerName     = callName1;
-        this.callerNumber   = callNumber1;
-        this.startTime      = callTime1;
+        this.callerName     = callName;
+        this.callerNumber   = callNumber;
+        this.startTime      = callTime;
 
         this.calleeName     = answerName;
         this.calleeNumber   = answerNumber;
