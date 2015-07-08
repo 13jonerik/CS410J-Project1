@@ -53,7 +53,14 @@ public class Project1 {
         }
     }
 
-
+    /**
+     * Search the command line arguments for an optional arg.
+     * The two optional arguments are -README, which prints
+     * information about the program to the console, and the 
+     * -print arg which validates the command line args and 
+     * prints the call info to the console. -README takes
+     * precedence over -print.
+     */
     private static void checkForOptional(ArrayList args) {
 //        String first = (String) args.get(0);
 //        if (first.startsWith("-")) {
