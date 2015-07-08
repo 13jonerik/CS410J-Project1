@@ -1,12 +1,13 @@
 package edu.pdx.cs410J.jonerik;
 
 import edu.pdx.cs410J.AbstractPhoneBill;
-import java.util.List;
+
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+
 
 /**
  * The main class for the CS410J Phone Bill Project
@@ -16,16 +17,12 @@ public class Project1 {
     public static void main(String[] args) {
         Class c = AbstractPhoneBill.class;  // Refer to one of Dave's classes so that we can be sure it is on the classpath
 
-        // if command line args aren't good, print this and exit gracefully
-        //System.err.println("Missing command line arguments");
 
         ArrayList<String> arguments = new ArrayList<String>(Arrays.asList(args));
         checkNumArgs(arguments);
         checkForOptional(arguments);
+        validateCall(arguments);
 
-
-        // addNewCall.addPhoneCall(addNewCall)
-        // System.out.println(addNewCall.getPhoneCalls());
 
         for (String arg : args) {
             System.out.println(arg);
@@ -89,7 +86,18 @@ public class Project1 {
     }
 
 
+    private static void validateCall(ArrayList callInfo){
+        String customer = (String) callInfo.get(0);
+        System.out.println(customer);
 
+        if (customer.matches("[a-zA-Z\\s*'-]+")){         // "[\"][a-zA-Z]+[\"]"
+            System.out.println("SUCCESS");
+
+        }
+
+
+
+    }
 
 
 
@@ -98,7 +106,7 @@ public class Project1 {
 
 
     private static void exitWithError(){
-        System.out.println("This is a temporary exit message!");
+        System.err.println("Missing command line arguments");
     }
 
 
