@@ -2,11 +2,15 @@ package edu.pdx.cs410J.jonerik;
 
 import edu.pdx.cs410J.AbstractPhoneBill;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.io.DataOutputStream;
+import java.io.FileOutputStream;
 
 
 /**
@@ -19,12 +23,51 @@ public class Project1 {
 
         ArrayList<String> arguments = new ArrayList<String>(Arrays.asList(args));
 
-        checkNumArgs(arguments);
+        checkZeroArgs(arguments);
         checkForOptional(arguments);
+        checkNumArgs(arguments);
         validateCall(arguments);
+
+        String textFile     = "phoneBill1.txt";
+        String customer     = arguments.get(0);
+        String callerNumber = arguments.get(1);
+        String calleeNumber = arguments.get(2);
+        String startTime    = arguments.get(3) + " " + arguments.get(4);
+        String endTime      = arguments.get(5) + " " + arguments.get(6);
+
+
+
+
+        PhoneCall firstCall = new PhoneCall(callerNumber, calleeNumber,       // Create the phone call
+                startTime, endTime);
+
+        PhoneBill firstBill = new PhoneBill(customer);                       //  Add the first call to a bill
+        firstBill.addPhoneCall(firstCall);
+
+        DataOutputStream addCall;
+        try {
+            addCall = new DataOutputStream(new FileOutputStream(textFile));
+
+            TextDumper dumpMe = new TextDumper(addCall);
+
+            dumpMe.dump(firstBill);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
 
         System.exit(0);
     }
+
+
+    private static void checkZeroArgs(ArrayList args){
+
+        if (args.size() == 0) {
+            System.err.println("Missing command line arguments");
+            System.exit(1);
+        }
+    }
+
 
     /**
      * checkNumArgs is designed to take the command line arguments and 
@@ -36,11 +79,6 @@ public class Project1 {
      * than 9, the program prints an error and exits with 1. 
      */
     private static void checkNumArgs (ArrayList args) {
-
-        if (args.size() == 0) {
-            System.err.println("Missing command line arguments");
-            System.exit(1);
-        }
 
         if (args.size() < 7) {
             System.err.println("Missing command line arguments");
@@ -62,22 +100,19 @@ public class Project1 {
      * precedence over -print.
      */
     private static void checkForOptional(ArrayList args) {
-//        String first = (String) args.get(0);
-//        if (first.startsWith("-")) {
+        String first = (String) args.get(0);
+        if (first.startsWith("-")) {
             if (args.contains("-README")) {
                 readMe();
                 System.exit(0);
             } else if (args.contains("-print")) {
-                //check this to make print method work
                 args.remove(args.indexOf("-print"));
                 if (validateCall(args)) {
                     printCall(args);
                     System.exit(0);
                 }
-           // } else {
-                //exitWithError();
             }
-
+        }
     }
 
     /**
@@ -97,7 +132,7 @@ public class Project1 {
         String startTime    = callInfo.get(3) + " " + callInfo.get(4);
         String endTime      = callInfo.get(5) + " " + callInfo.get(6);
 
-        if (!customer.matches("[a-zA-Z\\s*'-]+")) {         // "[\"][a-zA-Z]+[\"]"
+        if (!customer.matches("[a-zA-Z\\s*' - - ! @ # $ % ^ & * ? 1 2 3 4 5 6 7 8 9 0 , .]+")) {         // "[\"][a-zA-Z]+[\"]"
             System.err.println("Customer Name Invalid");
             System.exit(1);
         } else if (!callerNumber.matches("[0-9]{3}[-][0-9]{3}[-][0-9]{4}")) {
@@ -143,13 +178,13 @@ public class Project1 {
                                 "   startTime:          Date and time call began (24-hour time)\n" +
                                 "   endTime:            Date and time call ended (24-hour time)\n" +
                                 "   options are (options may appear in any order):\n" +
+                                "   -textFile file      where to read/write the phone bill\n"
                                 "   -print:             Prints a description of the new phone call\n" +
                                 "   -README:            Prints a README for this project and exits\n" +
                                 "   Date and time should be in the format: mm/dd/yyyy hh:mm"
                             );
 
     }
-
 
 
     /**
@@ -160,30 +195,17 @@ public class Project1 {
      * method in the PhoneCall class to print info to console. 
      */
     private static void printCall(ArrayList callInfo){
-        //System.out.println("\nCall from " + callInfo.get(1) + " at " + callInfo.get(2) + "\n" +
-        //                            "Received by " + callInfo.get(3) + "\n" +
-        //                            "Duration: " + callInfo.get(4) + " - " + callInfo.get(5) + "\n");
 
-
-        String customer     = (String) callInfo.get(0);
         String callerNumber = (String) callInfo.get(1);
         String calleeNumber = (String) callInfo.get(2);
         String startTime    = callInfo.get(3) + " " + callInfo.get(4);
         String endTime      = callInfo.get(5) + " " + callInfo.get(6);
 
-        PhoneCall firstCall = new PhoneCall(customer, callerNumber, calleeNumber,
+        PhoneCall firstCall = new PhoneCall(callerNumber, calleeNumber,
                 startTime, endTime);
 
         System.out.println(firstCall.toString());
 
     }
-
-
-    private static void exitWithError(){
-        System.err.println("Missing command line arguments");
-        System.exit(1);
-    }
-
-
 
 }

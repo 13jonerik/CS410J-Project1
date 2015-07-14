@@ -6,24 +6,27 @@ import java.util.Date;
 
 /**
  * Created by jonerik13 on 7/6/15.
+ * The PhoneCall class extends the AbstractPhoneCall
+ * interface and adds all functionality. A PhoneCall
+ * has a to and from number, and a
+ * start and end time.
  */
 public class PhoneCall extends AbstractPhoneCall{
 
 
-    private String customer;
     private String callerNumber;
     private String calleeNumber;
     private String startTime;
     private String endTime;
 
-    public PhoneCall(){
-        super();
-    }
 
-    public PhoneCall(String customer, String callerNumber, String calleeNumber,
+    /**
+     * Constructor for the PhoneCall
+     */
+    public PhoneCall(String callerNumber, String calleeNumber,
                      String callTime, String endTime) {
 
-        this.customer     = customer;
+
         this.callerNumber   = callerNumber;
         this.calleeNumber   = calleeNumber;
         this.startTime      = callTime;
@@ -55,6 +58,10 @@ public class PhoneCall extends AbstractPhoneCall{
         return endTime;
     }
 
+    /**
+     * The toString method is used in the -print argument for Project1
+     * file to print the phone call information to the console.
+     */
     public String toString() {
         return "Phone call from " + this.getCaller() + " to " + this.getCallee() + " from " + this.getStartTimeString() + " to " + this.getEndTimeString();
     }

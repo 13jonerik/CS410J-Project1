@@ -4,32 +4,46 @@ import edu.pdx.cs410J.AbstractPhoneBill;
 import edu.pdx.cs410J.AbstractPhoneCall;
 
 import java.util.Collection;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by jonerik13 on 7/6/15.
+ * PhoneBill Class extends AbstractPhoneBill
+ * and adds all functionality for the interface.
  */
 public class PhoneBill extends AbstractPhoneBill {
 
+
+    /**
+     * A phone bill contains a customer name and
+     * a list of phone calls made.
+     */
     private String customer;
-    private PhoneCall call;
-    private Collection <AbstractPhoneCall> calls;
+    //private PhoneCall call;
+    private List<AbstractPhoneCall> calls = new ArrayList<AbstractPhoneCall>();
 
 
-
-    public PhoneBill(String customer, PhoneCall call) {
+    /**
+     * constructor for a PhoneBil;
+     */
+    public PhoneBill(String customer) {
         this.customer   = customer;
-        this.call       = call;
+        //this.call       = call;
     }
 
     public String getCustomer() {
         return customer;
     }
 
+    /**
+     * Add a phone call to the customers bill
+     */
     public void addPhoneCall(AbstractPhoneCall var1) {
         calls.add(var1);
     }
 
-    public Collection getPhoneCalls(){
+    public List getPhoneCalls(){
         return calls;
     }
 
