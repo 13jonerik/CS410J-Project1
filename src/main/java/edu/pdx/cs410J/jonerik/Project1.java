@@ -1,6 +1,7 @@
 package edu.pdx.cs410J.jonerik;
 
 import edu.pdx.cs410J.AbstractPhoneBill;
+import edu.pdx.cs410J.ParserException;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -10,7 +11,9 @@ import java.util.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.io.DataOutputStream;
+import java.io.DataInputStream;
 import java.io.FileOutputStream;
+import java.io.FileInputStream;
 
 
 /**
@@ -25,10 +28,12 @@ public class Project1 {
 
         checkZeroArgs(arguments);
         checkForOptional(arguments);
-        checkNumArgs(arguments);
-        validateCall(arguments);
 
-        String textFile     = "phoneBill1.txt";
+        checkNumArgs(arguments);
+        checkForFileOption(arguments);
+        //validateCall(arguments);
+
+        //String textFile     = "phoneBill1.txt";
         String customer     = arguments.get(0);
         String callerNumber = arguments.get(1);
         String calleeNumber = arguments.get(2);
@@ -44,16 +49,7 @@ public class Project1 {
         PhoneBill firstBill = new PhoneBill(customer);                       //  Add the first call to a bill
         firstBill.addPhoneCall(firstCall);
 
-        DataOutputStream addCall;
-        try {
-            addCall = new DataOutputStream(new FileOutputStream(textFile));
 
-            TextDumper dumpMe = new TextDumper(addCall);
-
-            dumpMe.dump(firstBill);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
 
         System.exit(0);
@@ -85,7 +81,7 @@ public class Project1 {
             System.exit(1);
         }
 
-        if( args.size() > 9) {
+        if( args.size() > 11) {
             System.err.println("Too many command line arguments");
             System.exit(1);
         }
@@ -105,6 +101,7 @@ public class Project1 {
             if (args.contains("-README")) {
                 readMe();
                 System.exit(0);
+
             } else if (args.contains("-print")) {
                 args.remove(args.indexOf("-print"));
                 if (validateCall(args)) {
@@ -113,6 +110,56 @@ public class Project1 {
                 }
             }
         }
+    }
+
+
+    public static void checkForFileOption(ArrayList arguments) {
+
+        if (arguments.contains("-textFile")) {
+            //validateCall(arguments);
+
+            String fileName = (String) arguments.get(1);
+            String customer = (String) arguments.get(2);
+            String callerNumber = (String) arguments.get(3);
+            String calleeNumber = (String) arguments.get(4);
+            String startTime = arguments.get(5) + " " + arguments.get(6);
+            String endTime = arguments.get(7) + " " + arguments.get(8);
+
+            PhoneCall firstCall = new PhoneCall(callerNumber, calleeNumber,       // Create the phone call
+                    startTime, endTime);
+
+            PhoneBill firstBill = new PhoneBill(customer);                       //  Add the first call to a bill
+            firstBill.addPhoneCall(firstCall);
+
+
+            readPhoneBill(fileName, firstBill);
+        }
+
+    }
+
+
+
+    public static void readPhoneBill(String fileName, AbstractPhoneBill firstBill) {
+
+        DataOutputStream    stream;
+        DataInputStream     stream2;
+        try {
+            stream  = new DataOutputStream(new FileOutputStream(fileName));
+            stream2 = new DataInputStream(new FileInputStream(fileName));
+
+            TextDumper dumper = new TextDumper(stream);
+            dumper.dump(firstBill);
+            TextParser parser = new TextParser(stream2);
+            try {
+                parser.parse();
+            } catch (ParserException e) {
+                e.printStackTrace();
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     /**
@@ -178,7 +225,7 @@ public class Project1 {
                                 "   startTime:          Date and time call began (24-hour time)\n" +
                                 "   endTime:            Date and time call ended (24-hour time)\n" +
                                 "   options are (options may appear in any order):\n" +
-                                "   -textFile file      where to read/write the phone bill\n"
+                                "   -textFile file      where to read/write the phone bill\n" +
                                 "   -print:             Prints a description of the new phone call\n" +
                                 "   -README:            Prints a README for this project and exits\n" +
                                 "   Date and time should be in the format: mm/dd/yyyy hh:mm"

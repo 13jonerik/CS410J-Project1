@@ -4,6 +4,7 @@ package edu.pdx.cs410J.jonerik;
 import edu.pdx.cs410J.AbstractPhoneBill;
 import edu.pdx.cs410J.PhoneBillDumper;
 
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
@@ -23,6 +24,8 @@ public class TextDumper implements PhoneBillDumper{
     public void dump(AbstractPhoneBill var1) throws IOException {
 
           call.writeBytes(var1.toString());
+          call.writeBytes("\n");
+          call.writeBytes(String.valueOf(var1.getPhoneCalls()));
 
     }
 }
