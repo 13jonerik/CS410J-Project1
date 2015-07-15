@@ -3,16 +3,13 @@ package edu.pdx.cs410J.jonerik;
 import edu.pdx.cs410J.AbstractPhoneBill;
 import edu.pdx.cs410J.ParserException;
 
-import java.io.IOException;
+import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.io.DataOutputStream;
-import java.io.DataInputStream;
-import java.io.FileOutputStream;
-import java.io.FileInputStream;
 
 
 /**
@@ -30,26 +27,6 @@ public class Project1 {
         checkNumArgs(arguments);
         arguments = checkForFileOption(arguments);
         arguments = checkForPrint(arguments);
-        validateCall(arguments);
-
-        //String textFile     = "phoneBill1.txt";
-        String customer     = (String) arguments.get(0);
-        String callerNumber = (String) arguments.get(1);
-        String calleeNumber = (String) arguments.get(2);
-        String startTime    = arguments.get(3) + " " + arguments.get(4);
-        String endTime      = arguments.get(5) + " " + arguments.get(6);
-
-
-
-
-        PhoneCall firstCall = new PhoneCall(callerNumber, calleeNumber,       // Create the phone call
-                startTime, endTime);
-
-        PhoneBill firstBill = new PhoneBill(customer);                       //  Add the first call to a bill
-        firstBill.addPhoneCall(firstCall);
-
-
-
 
         System.exit(0);
     }
@@ -63,15 +40,14 @@ public class Project1 {
         }
     }
 
-
     /**
-     * checkNumArgs is designed to take the command line arguments and 
+     * checkNumArgs is designed to take the command line arguments and
      * check to make sure that a valid number of arguments are passed.
      * There are 5 required args and two optional args, however dates
      * are not considered one arg in the command line, they are two.
-     * So for this check the range of acceptable CL args is 7 - 9. 
+     * So for this check the range of acceptable CL args is 7 - 9.
      * If 0 args are passed, or the arguments are less than 7 or greater
-     * than 9, the program prints an error and exits with 1. 
+     * than 9, the program prints an error and exits with 1.
      */
     private static void checkNumArgs (ArrayList args) {
 
@@ -89,8 +65,8 @@ public class Project1 {
     /**
      * Search the command line arguments for an optional arg.
      * The two optional arguments are -README, which prints
-     * information about the program to the console, and the 
-     * -print arg which validates the command line args and 
+     * information about the program to the console, and the
+     * -print arg which validates the command line args and
      * prints the call info to the console. -README takes
      * precedence over -print.
      */
@@ -121,19 +97,14 @@ public class Project1 {
     public static ArrayList checkForFileOption(ArrayList arguments) {
 
         if (arguments.contains("-textFile")) {
-            //validateCall(arguments);
-
-
-
 
             int i = 1;
             String fileName = (String) arguments.get(i++);
 
-
-
-
             if (arguments.contains("-print")) {
-                i++;
+                //printCall(arguments);
+                //arguments.remove(arguments.indexOf("-print"));
+                ++i;
             }
 
             String customer = (String) arguments.get(i++);
@@ -143,23 +114,18 @@ public class Project1 {
             String endTime = arguments.get(i++) + " " + arguments.get(i);
 
 
-
-            /*
             PhoneCall firstCall = new PhoneCall(callerNumber, calleeNumber,       // Create the phone call
                     startTime, endTime);
-
-            PhoneBill firstBill = new PhoneBill(customer);                       //  Add the first call to a bill
-            firstBill.addPhoneCall(firstCall);
-            */
-
-
-
 
 
             arguments.remove(arguments.indexOf("-textFile"));
             arguments.remove(arguments.indexOf(fileName));
 
-            readPhoneBill(fileName);
+            // validate args without throwing whole program
+            validateCall(arguments);
+
+            readPhoneBillFile(fileName, firstCall, arguments);
+
             return arguments;
         }
 
@@ -169,34 +135,82 @@ public class Project1 {
 
 
 
-    public static void readPhoneBill(String fileName) {
+    public static void readPhoneBillFile(String fileName, PhoneCall addCall, ArrayList args) {
+
+        try {
+            File file = new File(fileName);
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+
+            if (file.length() == 0) {
+
+                writeToEmptyFile(file, fileName, addCall, args.get(1).toString());
+                return;
+            }
+
+            parseAndDump(fileName, addCall);
+
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+
+    }
+
+    public static void parseAndDump(String fileName, PhoneCall addCall) {
 
         DataOutputStream    stream;
         DataInputStream     stream2;
 
         try {
-            stream  = new DataOutputStream(new FileOutputStream("proj2test2.txt"));
+
             stream2 = new DataInputStream(new FileInputStream(fileName));
-
-
-            TextDumper dumper = new TextDumper(stream);
-            //dumper.dump(firstBill);
-
-
             TextParser parser = new TextParser(stream2);
+            AbstractPhoneBill bill;
+
             try {
-                AbstractPhoneBill bill = parser.parse();
-                System.out.println(bill.toString());
+
+                bill = parser.parse();
+                stream2.close();
+
+                bill.addPhoneCall(addCall);
+
+                stream = new DataOutputStream(new FileOutputStream(fileName));
+                TextDumper dumper = new TextDumper(stream);
                 dumper.dump(bill);
+                stream.close();
 
             } catch (ParserException e) {
                 e.printStackTrace();
             }
 
-        } catch (IOException e) {
+        } catch (IOException e){
             e.printStackTrace();
         }
 
+    }
+
+
+    public static void writeToEmptyFile(File file, String fileName, PhoneCall addCall, String args) {
+
+        PhoneBill newBill = new PhoneBill(args);
+
+        DataOutputStream stream;
+
+        try {
+            file.createNewFile();
+
+                newBill.addPhoneCall(addCall);
+
+                stream = new DataOutputStream(new FileOutputStream(fileName));
+                TextDumper dumper = new TextDumper(stream);
+                dumper.dump(newBill);
+                stream.close();
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -210,12 +224,17 @@ public class Project1 {
      */
     private static boolean validateCall(ArrayList callInfo){
 
+        int i = 0;
+        if (callInfo.contains("-print")) {
+            //callInfo.remove(callInfo.indexOf("-print"));
+            i += 1;
+        }
 
-        String customer     = (String) callInfo.get(0);
-        String callerNumber = (String) callInfo.get(1);
-        String calleeNumber = (String) callInfo.get(2);
-        String startTime    = callInfo.get(3) + " " + callInfo.get(4);
-        String endTime      = callInfo.get(5) + " " + callInfo.get(6);
+        String customer     = (String) callInfo.get(i++);
+        String callerNumber = (String) callInfo.get(i++);
+        String calleeNumber = (String) callInfo.get(i++);
+        String startTime    = callInfo.get(i++) + " " + callInfo.get(i++);
+        String endTime      = callInfo.get(i++) + " " + callInfo.get(i);
 
         if (!customer.matches("[a-zA-Z\\s*' - - ! @ # $ % ^ & * ? 1 2 3 4 5 6 7 8 9 0 , .]+")) {         // "[\"][a-zA-Z]+[\"]"
             System.err.println("Customer Name Invalid");
@@ -281,10 +300,15 @@ public class Project1 {
      */
     private static void printCall(ArrayList callInfo){
 
-        String callerNumber = (String) callInfo.get(1);
-        String calleeNumber = (String) callInfo.get(2);
-        String startTime    = callInfo.get(3) + " " + callInfo.get(4);
-        String endTime      = callInfo.get(5) + " " + callInfo.get(6);
+        int i = 1;
+        if (callInfo.contains("-fileName")){
+            i += 2;
+        }
+
+        String callerNumber = (String) callInfo.get(i++);
+        String calleeNumber = (String) callInfo.get(i++);
+        String startTime    = callInfo.get(i++) + " " + callInfo.get(i++);
+        String endTime      = callInfo.get(i++) + " " + callInfo.get(i);
 
         PhoneCall firstCall = new PhoneCall(callerNumber, calleeNumber,
                 startTime, endTime);

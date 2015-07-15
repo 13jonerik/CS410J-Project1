@@ -26,9 +26,17 @@ public class TextDumper implements PhoneBillDumper {
 
     public void dump(AbstractPhoneBill var1) throws IOException {
 
-          call.writeBytes(String.valueOf(var1.getCustomer()));
-          call.writeBytes("\n");
-          call.writeBytes(String.valueOf(var1.getPhoneCalls()));
+        call.writeBytes(String.valueOf(var1.getCustomer()));
+        call.writeBytes("\n");
+
+        List <PhoneCall> temp = (List<PhoneCall>) var1.getPhoneCalls();
+        for ( AbstractPhoneCall each : temp) {
+            String parse = String.valueOf(each);
+            //System.out.println(parse);
+            String[] parseCall = parse.split(" ");
+            call.writeBytes(parseCall[3] + "," + parseCall[5] + "," + (parseCall[7] + " " + parseCall[8]) +
+                    "," + (parseCall[10] + " " + parseCall[11] + "\n")); //.substring(0, (parseCall[11].length() - 1))));
+        }
 
     }
 }

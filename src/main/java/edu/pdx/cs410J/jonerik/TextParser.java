@@ -29,16 +29,17 @@ public class TextParser implements PhoneBillParser {
             String singleCall;
 
             customer = reader.readLine();
-            if (!customer.matches("[a-zA-Z\\s*'-=!@#$%^&?_1234567890,.]+")) { return phoneBill; }
-
+            //System.out.println(customer);
+            //if (!(customer.matches("[a-zA-Z\\s*'-=!@#$%^&?_1234567890,.]+"))) { return phoneBill; }
 
             PhoneBill bill = new PhoneBill(customer);
 
             while((singleCall = reader.readLine()) != null) {
                 String[] split = singleCall.split(",");
-                if (!checkCall(split[0], split[1], split[2], split[3])) { return phoneBill; }
+                //if (!checkCall(split[0], split[1], split[2], split[3])) { return bill; }
 
                 bill.addPhoneCall(new PhoneCall(split[0], split[1], split[2], split[3]));
+
             }
 
             phoneBill = bill;

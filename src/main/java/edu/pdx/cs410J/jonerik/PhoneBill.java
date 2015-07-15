@@ -20,7 +20,6 @@ public class PhoneBill extends AbstractPhoneBill {
      * a list of phone calls made.
      */
     private String customer;
-    //private PhoneCall call;
     private List<AbstractPhoneCall> calls = new ArrayList<>();
 
 
@@ -29,7 +28,6 @@ public class PhoneBill extends AbstractPhoneBill {
      */
     public PhoneBill(String customer) {
         this.customer   = customer;
-        //this.call       = call;
     }
 
     public String getCustomer() {
