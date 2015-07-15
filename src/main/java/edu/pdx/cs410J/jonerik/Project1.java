@@ -94,6 +94,12 @@ public class Project1 {
     }
 
 
+    /**
+     * If the file option is in the command line arguments, create
+     * a call and pass that call, along with the file name to
+     * the readPhoneBill method. Take careful note if a -print
+     * argument also exists within the arguments.
+     */
     public static ArrayList checkForFileOption(ArrayList arguments) {
 
         if (arguments.contains("-textFile")) {
