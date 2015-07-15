@@ -15,6 +15,7 @@ public class TextParser implements PhoneBillParser {
 
     DataInputStream call;
 
+
     public TextParser (DataInputStream call) {
         this.call = call;
     }
@@ -28,24 +29,39 @@ public class TextParser implements PhoneBillParser {
             String customer;
             String singleCall;
 
-            customer = reader.readLine();
-            //System.out.println(customer);
-            //if (!(customer.matches("[a-zA-Z\\s*'-=!@#$%^&?_1234567890,.]+"))) { return phoneBill; }
 
-            PhoneBill bill = new PhoneBill(customer);
+            try {
 
-            while((singleCall = reader.readLine()) != null) {
-                String[] split = singleCall.split(",");
-                //if (!checkCall(split[0], split[1], split[2], split[3])) { return bill; }
+                customer = reader.readLine();
+                if (!(customer.matches("[a-zA-Z\\s*'-=!@#$%^&?_1234567890,.]+"))) {
+                    return phoneBill;
+                }
 
-                bill.addPhoneCall(new PhoneCall(split[0], split[1], split[2], split[3]));
+                PhoneBill bill = new PhoneBill(customer);
 
+                while ((singleCall = reader.readLine()) != null) {
+                    String[] split = singleCall.split(",");
+                    if (split.length != 4) {
+                        return bill;
+                    }
+                    if (!checkCall(split[0], split[1], split[2], split[3])) {
+                        throw new ParserException("The text file is malformatted. Please check the file" +
+                                " format and try running again.");
+                    }
+
+                    bill.addPhoneCall(new PhoneCall(split[0], split[1], split[2], split[3]));
+                }
+
+                phoneBill = bill;
+
+            } catch (ParserException e) {
+                System.err.println(e.getMessage());
+                System.exit(1);
             }
 
-            phoneBill = bill;
 
         } catch (IOException e) {
-            System.err.println("Error in IOException: " + e.getMessage());
+            throw new ParserException("Error in opening file. Please check the file and try again", e);
         }
 
         return phoneBill;

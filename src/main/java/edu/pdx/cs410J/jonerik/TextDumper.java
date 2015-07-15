@@ -5,11 +5,10 @@ import edu.pdx.cs410J.AbstractPhoneBill;
 import edu.pdx.cs410J.AbstractPhoneCall;
 import edu.pdx.cs410J.PhoneBillDumper;
 
-import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.List;
-import java.util.Collection;
+
 
 /**
  *
@@ -32,7 +31,7 @@ public class TextDumper implements PhoneBillDumper {
         List <PhoneCall> temp = (List<PhoneCall>) var1.getPhoneCalls();
         for ( AbstractPhoneCall each : temp) {
             String parse = String.valueOf(each);
-            //System.out.println(parse);
+
             String[] parseCall = parse.split(" ");
             call.writeBytes(parseCall[3] + "," + parseCall[5] + "," + (parseCall[7] + " " + parseCall[8]) +
                     "," + (parseCall[10] + " " + parseCall[11] + "\n")); //.substring(0, (parseCall[11].length() - 1))));

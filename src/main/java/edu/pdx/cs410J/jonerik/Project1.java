@@ -108,8 +108,6 @@ public class Project1 {
             String fileName = (String) arguments.get(i++);
 
             if (arguments.contains("-print")) {
-                //printCall(arguments);
-                //arguments.remove(arguments.indexOf("-print"));
                 ++i;
             }
 
@@ -140,8 +138,16 @@ public class Project1 {
     }
 
 
-
+    /**
+     * This function is responsible for checking if a file exists and then executing
+     * the parseAndDump function. If a file is not found, the program is not
+     * interrupted but instead creates a new file and writes a new phoneBill
+     * to the empty file.
+     */
     public static void readPhoneBillFile(String fileName, PhoneCall addCall, ArrayList args) {
+
+        int i = 0;
+        if(args.contains("-print")) { ++i; }
 
         try {
             File file = new File(fileName);
@@ -149,13 +155,12 @@ public class Project1 {
                 file.createNewFile();
             }
 
-            if (file.length() == 0) {
-
-                writeToEmptyFile(file, fileName, addCall, args.get(1).toString());
+            if (file.length() <= 0) {
+                writeToEmptyFile(file, fileName, addCall, args.get(i).toString());
                 return;
             }
 
-            parseAndDump(fileName, addCall);
+            parseAndDump(fileName, addCall, args.get(i).toString());
 
         } catch (IOException e){
             e.printStackTrace();
@@ -163,7 +168,7 @@ public class Project1 {
 
     }
 
-    public static void parseAndDump(String fileName, PhoneCall addCall) {
+    public static void parseAndDump(String fileName, PhoneCall addCall, String customer) {
 
         DataOutputStream    stream;
         DataInputStream     stream2;
@@ -181,18 +186,26 @@ public class Project1 {
 
                 bill.addPhoneCall(addCall);
 
+                if (!bill.getCustomer().equals(customer)) {
+                    throw new ParserException("The name on the phoneBill and the name" +
+                            " passed into the program don't match. Please check the file" +
+                            " and try running again. ");
+                }
+
                 stream = new DataOutputStream(new FileOutputStream(fileName));
                 TextDumper dumper = new TextDumper(stream);
                 dumper.dump(bill);
                 stream.close();
 
             } catch (ParserException e) {
-                e.printStackTrace();
+                System.err.println(e.getMessage());
+                System.exit(1);
             }
 
         } catch (IOException e){
-            e.printStackTrace();
+            System.err.println("Error in opening file: " + e);
         }
+
 
     }
 
@@ -202,11 +215,12 @@ public class Project1 {
         PhoneBill newBill = new PhoneBill(args);
 
         DataOutputStream stream;
-
         try {
-            file.createNewFile();
+            try {
+                file.createNewFile();
 
                 newBill.addPhoneCall(addCall);
+
 
                 stream = new DataOutputStream(new FileOutputStream(fileName));
                 TextDumper dumper = new TextDumper(stream);
@@ -214,8 +228,11 @@ public class Project1 {
                 stream.close();
 
 
-        } catch (IOException e) {
-            e.printStackTrace();
+            } catch (IOException e) {
+                throw new ParserException("Error in writing to empty file.", e);
+            }
+        } catch (ParserException e) {
+            e.getMessage();
         }
     }
 
