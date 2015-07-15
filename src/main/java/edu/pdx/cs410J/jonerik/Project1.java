@@ -3,7 +3,6 @@ package edu.pdx.cs410J.jonerik;
 import edu.pdx.cs410J.AbstractPhoneBill;
 import edu.pdx.cs410J.ParserException;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.ArrayList;
@@ -24,19 +23,19 @@ public class Project1 {
     public static void main(String[] args) {
         Class c = AbstractPhoneBill.class;  // Refer to one of Dave's classes so that we can be sure it is on the classpath
 
-        ArrayList<String> arguments = new ArrayList<String>(Arrays.asList(args));
+        ArrayList arguments = new ArrayList<String>(Arrays.asList(args));
 
         checkZeroArgs(arguments);
-        checkForOptional(arguments);
-
+        checkForReadMe(arguments);
         checkNumArgs(arguments);
-        checkForFileOption(arguments);
-        //validateCall(arguments);
+        arguments = checkForFileOption(arguments);
+        arguments = checkForPrint(arguments);
+        validateCall(arguments);
 
         //String textFile     = "phoneBill1.txt";
-        String customer     = arguments.get(0);
-        String callerNumber = arguments.get(1);
-        String calleeNumber = arguments.get(2);
+        String customer     = (String) arguments.get(0);
+        String callerNumber = (String) arguments.get(1);
+        String calleeNumber = (String) arguments.get(2);
         String startTime    = arguments.get(3) + " " + arguments.get(4);
         String endTime      = arguments.get(5) + " " + arguments.get(6);
 
@@ -95,63 +94,101 @@ public class Project1 {
      * prints the call info to the console. -README takes
      * precedence over -print.
      */
-    private static void checkForOptional(ArrayList args) {
+    private static void checkForReadMe(ArrayList args) {
         String first = (String) args.get(0);
         if (first.startsWith("-")) {
             if (args.contains("-README")) {
                 readMe();
                 System.exit(0);
 
-            } else if (args.contains("-print")) {
-                args.remove(args.indexOf("-print"));
-                if (validateCall(args)) {
-                    printCall(args);
-                    System.exit(0);
-                }
             }
         }
     }
 
+    private static ArrayList checkForPrint(ArrayList args) {
 
-    public static void checkForFileOption(ArrayList arguments) {
+        if (args.contains("-print")) {
+            args.remove(args.indexOf("-print"));
+            if (validateCall(args)) {
+                printCall(args);
+
+            }
+        }
+        return args;
+    }
+
+
+    public static ArrayList checkForFileOption(ArrayList arguments) {
 
         if (arguments.contains("-textFile")) {
             //validateCall(arguments);
 
-            String fileName = (String) arguments.get(1);
-            String customer = (String) arguments.get(2);
-            String callerNumber = (String) arguments.get(3);
-            String calleeNumber = (String) arguments.get(4);
-            String startTime = arguments.get(5) + " " + arguments.get(6);
-            String endTime = arguments.get(7) + " " + arguments.get(8);
 
+
+
+            int i = 1;
+            String fileName = (String) arguments.get(i++);
+
+
+
+
+            if (arguments.contains("-print")) {
+                i++;
+            }
+
+            String customer = (String) arguments.get(i++);
+            String callerNumber = (String) arguments.get(i++);
+            String calleeNumber = (String) arguments.get(i++);
+            String startTime = arguments.get(i++) + " " + arguments.get(i++);
+            String endTime = arguments.get(i++) + " " + arguments.get(i);
+
+
+
+            /*
             PhoneCall firstCall = new PhoneCall(callerNumber, calleeNumber,       // Create the phone call
                     startTime, endTime);
 
             PhoneBill firstBill = new PhoneBill(customer);                       //  Add the first call to a bill
             firstBill.addPhoneCall(firstCall);
+            */
 
 
-            readPhoneBill(fileName, firstBill);
+
+
+
+            arguments.remove(arguments.indexOf("-textFile"));
+            arguments.remove(arguments.indexOf(fileName));
+
+            readPhoneBill(fileName);
+            return arguments;
         }
+
+        return arguments;
 
     }
 
 
 
-    public static void readPhoneBill(String fileName, AbstractPhoneBill firstBill) {
+    public static void readPhoneBill(String fileName) {
 
         DataOutputStream    stream;
         DataInputStream     stream2;
+
         try {
-            stream  = new DataOutputStream(new FileOutputStream(fileName));
+            stream  = new DataOutputStream(new FileOutputStream("proj2test2.txt"));
             stream2 = new DataInputStream(new FileInputStream(fileName));
 
+
             TextDumper dumper = new TextDumper(stream);
-            dumper.dump(firstBill);
+            //dumper.dump(firstBill);
+
+
             TextParser parser = new TextParser(stream2);
             try {
-                parser.parse();
+                AbstractPhoneBill bill = parser.parse();
+                System.out.println(bill.toString());
+                dumper.dump(bill);
+
             } catch (ParserException e) {
                 e.printStackTrace();
             }
@@ -173,6 +210,7 @@ public class Project1 {
      */
     private static boolean validateCall(ArrayList callInfo){
 
+
         String customer     = (String) callInfo.get(0);
         String callerNumber = (String) callInfo.get(1);
         String calleeNumber = (String) callInfo.get(2);
@@ -188,10 +226,10 @@ public class Project1 {
         } else if (!calleeNumber.matches("[0-9]{3}[-][0-9]{3}[-][0-9]{4}")) {
             System.err.println("Callee Number Invalid");
             System.exit(1);
-        } else if (!startTime.matches("[0-3][0-9]{0,1}[/][0-9][0-9]{0,1}[/][0-9]{4}[\\s*][0-9][0-9]{0,1}[:][0-5][0-9]")) {
+        } else if (!startTime.matches("[0-9][0-9]{0,1}[/][0-9][0-9]{0,1}[/][0-9]{4}[\\s*][0-9][0-9]{0,1}[:][0-5][0-9]")) {
             System.err.println("Start Time Invalid");
             System.exit(1);
-        } else if (!endTime.matches("[0-3][0-9]{0,1}[/][0-9][0-9]{0,1}[/][0-9]{4}[\\s*][0-9][0-9]{0,1}[:][0-5][0-9]")) {
+        } else if (!endTime.matches("[0-9][0-9]{0,1}[/][0-9][0-9]{0,1}[/][0-9]{4}[\\s*][0-9][0-9]{0,1}[:][0-5][0-9]")) {
             System.err.println("End Time Invalid");
             System.exit(1);
         }

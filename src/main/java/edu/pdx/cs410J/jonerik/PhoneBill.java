@@ -21,7 +21,7 @@ public class PhoneBill extends AbstractPhoneBill {
      */
     private String customer;
     //private PhoneCall call;
-    private List<AbstractPhoneCall> calls = new ArrayList<AbstractPhoneCall>();
+    private List<AbstractPhoneCall> calls = new ArrayList<>();
 
 
     /**
