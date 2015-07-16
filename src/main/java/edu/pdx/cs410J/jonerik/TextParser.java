@@ -8,18 +8,38 @@ import edu.pdx.cs410J.ParserException;
 import java.io.*;
 
 /**
- *
- * Created by jonerik13 on 7/13/15.
+ * The TextParse class is responsible for
+ * taking the contents of a file and then
+ * parsing it and adding it to a phone bill.
+ * If a file does not exist or is empty, the
+ * bill will be null when returned. If the
+ * incoming arguments are not well formed, a
+ * parser exception is thrown and the program
+ * will stop execution.
  */
 public class TextParser implements PhoneBillParser {
 
     DataInputStream call;
 
 
+    /**
+     * Constructor for TextParser class. Takes
+     * in a DataInputStream to parse the file.
+     * @param call
+     */
     public TextParser (DataInputStream call) {
         this.call = call;
     }
 
+
+    /**
+     * The parse method will have a DataInputStream and
+     * read the contents of a text file, checking if they
+     * are well formed, and then add the customer name and
+     * the phone call fields to a phone bill.
+     * @return
+     * @throws ParserException
+     */
     public AbstractPhoneBill parse() throws ParserException {
         AbstractPhoneBill phoneBill = null;
 
@@ -67,6 +87,17 @@ public class TextParser implements PhoneBillParser {
         return phoneBill;
     }
 
+    /**
+     * Helper function to help validate the incoming arguments from
+     * the text file. Return false if the arguments do not match the
+     * same requirements for the command line arguments. Return true
+     * if the incoming arguments are all well formed.
+     * @param callerNumber
+     * @param calleeNumber
+     * @param startTime
+     * @param endTime
+     * @return
+     */
     public boolean checkCall (String callerNumber, String calleeNumber, String startTime, String endTime) {
 
         if (!callerNumber.matches("[0-9]{3}[-][0-9]{3}[-][0-9]{4}")) { return false; }

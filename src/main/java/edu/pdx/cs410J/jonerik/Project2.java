@@ -3,7 +3,6 @@ package edu.pdx.cs410J.jonerik;
 import edu.pdx.cs410J.AbstractPhoneBill;
 import edu.pdx.cs410J.ParserException;
 
-import java.io.FileNotFoundException;
 import java.io.*;
 import java.util.Arrays;
 import java.util.ArrayList;
@@ -14,8 +13,19 @@ import java.text.SimpleDateFormat;
 
 /**
  * The main class for the CS410J Phone Bill Project
+ *
+ * This iteration of the project allows the user to pass in
+ * a file name with a phoneBill, and then add another call
+ * via the command line to the bill. The required format of
+ * the text file is:
+ * customer name
+ * callerNumber,calleeNumber,startTime,endTime
+ * callerNumber,calleeNumber,startTime,endTime
+ *
+ * etc.
+ *
  */
-public class Project1 {
+public class Project2 {
 
     public static void main(String[] args) {
         Class c = AbstractPhoneBill.class;  // Refer to one of Dave's classes so that we can be sure it is on the classpath
@@ -32,6 +42,9 @@ public class Project1 {
     }
 
 
+    /**
+     * Check to see if the user forgot to enter commandline args
+     */
     private static void checkZeroArgs(ArrayList args){
 
         if (args.size() == 0) {
@@ -81,6 +94,11 @@ public class Project1 {
         }
     }
 
+    /**
+     * Check for the print command in the arrayList of args
+     * @param args
+     * @return
+     */
     private static ArrayList checkForPrint(ArrayList args) {
 
         if (args.contains("-print")) {
@@ -168,6 +186,16 @@ public class Project1 {
 
     }
 
+    /**
+     * Open a text file with the fileName from the command line and add the
+     * customer name and call from the file to a phoneBill on success. Make
+     * sure that the name on the phoneBill matches the name from the CL and
+     * then dump the contents of the file, along with the new call back to
+     * the given file.
+     * @param fileName
+     * @param addCall
+     * @param customer
+     */
     public static void parseAndDump(String fileName, PhoneCall addCall, String customer) {
 
         DataOutputStream    stream;
@@ -202,14 +230,22 @@ public class Project1 {
                 System.exit(1);
             }
 
-        } catch (IOException e){
+        } catch (IOException e) {
             System.err.println("Error in opening file: " + e);
         }
 
 
     }
 
-
+    /**
+     * If the file either does not exist, or is empty, use this function to
+     * create a file and dump the command line call into the file, along
+     * with the name in the correct format.
+     * @param file
+     * @param fileName
+     * @param addCall
+     * @param args
+     */
     public static void writeToEmptyFile(File file, String fileName, PhoneCall addCall, String args) {
 
         PhoneBill newBill = new PhoneBill(args);
@@ -294,6 +330,7 @@ public class Project1 {
         Date date = new Date();
 
         System.out.println("\nREADME:\n\n" +
+                            "Jon-Erik Svenson\n" +
                             "Phone Bill Application for Project 1 version 1.0. " + currDate.format(date) + "\n\n" +
                             "This application is designed to record a call to a customers phone bill using\n" +
                             "command line arguments to pass necessary information. The main functionality\n" +

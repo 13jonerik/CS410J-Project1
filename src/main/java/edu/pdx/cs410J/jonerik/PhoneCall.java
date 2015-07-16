@@ -59,7 +59,7 @@ public class PhoneCall extends AbstractPhoneCall{
     }
 
     /**
-     * The toString method is used in the -print argument for Project1
+     * The toString method is used in the -print argument for Project2
      * file to print the phone call information to the console.
      */
     public String toString() {
