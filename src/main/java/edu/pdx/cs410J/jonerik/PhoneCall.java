@@ -3,6 +3,7 @@ package edu.pdx.cs410J.jonerik;
 import edu.pdx.cs410J.AbstractPhoneCall;
 
 import java.util.Date;
+import java.text.DateFormat;
 
 /**
  * Created by jonerik13 on 7/6/15.
@@ -16,8 +17,8 @@ public class PhoneCall extends AbstractPhoneCall{
 
     private String callerNumber;
     private String calleeNumber;
-    private String startTime;
-    private String endTime;
+    private Date startTime;
+    private Date endTime;
 
 
     /**
@@ -29,8 +30,8 @@ public class PhoneCall extends AbstractPhoneCall{
 
         this.callerNumber   = callerNumber;
         this.calleeNumber   = calleeNumber;
-        this.startTime      = callTime;
-        this.endTime        = endTime;
+        this.startTime      = formatDate(callTime);
+        this.endTime        = formatDate(endTime);
 
     }
 
@@ -43,19 +44,19 @@ public class PhoneCall extends AbstractPhoneCall{
     }
 
     public Date getStartTime() {
-        return null;
+        return getStartTime();
     }
 
     public String getStartTimeString() {
-        return startTime;
+        return startTime.toString();
     }
 
     public Date getEndTime() {
-        return null;
+        return getEndTime();
     }
 
     public String getEndTimeString(){
-        return endTime;
+        return endTime.toString();
     }
 
     /**
@@ -65,5 +66,26 @@ public class PhoneCall extends AbstractPhoneCall{
     public String toString() {
         return "Phone call from " + this.getCaller() + " to " + this.getCallee() + " from " + this.getStartTimeString() + " to " + this.getEndTimeString();
     }
+
+    /**
+     * Helper function used to save the startTime and
+     * endTime as dates, without changing how the dates
+     * are read in from the command line. The constructor
+     * takes in strings as arguments and this function
+     * will format into a date object in the constructor
+     */
+    public static Date formatDate(String date) {
+        DateFormat d = DateFormat.getDateInstance(DateFormat.SHORT);
+
+        try {
+            Date myDate = d.parse(date);
+            return myDate;
+        } catch(java.text.ParseException e) {
+            System.err.println("ERROR IN DATE PARSE");
+            System.exit(1);
+        }
+        return null;
+    }
+
 
 }
