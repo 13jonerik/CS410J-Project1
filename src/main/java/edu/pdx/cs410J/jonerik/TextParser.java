@@ -49,7 +49,6 @@ public class TextParser implements PhoneBillParser {
             String customer;
             String singleCall;
 
-
             try {
 
                 customer = reader.readLine();

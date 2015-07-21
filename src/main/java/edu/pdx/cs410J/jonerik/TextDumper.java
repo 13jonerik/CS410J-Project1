@@ -45,7 +45,18 @@ public class TextDumper implements PhoneBillDumper {
         call.writeBytes("\n");
 
         List <PhoneCall> temp = (List<PhoneCall>) var1.getPhoneCalls();
+
+        int length = temp.size();
+        temp = removeDuplicates(temp, length);
+
         Collections.sort(temp);
+
+
+
+
+        // remove duplicate calls from PhoneBill
+        //List <PhoneCall> removeDup = new ArrayList();
+
 
         //System.out.println(temp.get(0).getStartTimeString());
         for ( AbstractPhoneCall each : temp) {
@@ -60,6 +71,22 @@ public class TextDumper implements PhoneBillDumper {
 
     }
 
+
+    public List<PhoneCall> removeDuplicates(List<PhoneCall> temp, int length) {
+
+        for (int i = 0; i < length; i++) {
+            for (int j = i+1; j < length; j++){
+                if (temp.get(i).compareTo(temp.get(j)) == 0) {
+                    temp.remove(temp.get(i));
+                    --length;
+                    removeDuplicates(temp, length);
+                    return temp;
+                }
+            }
+        }
+
+        return temp;
+    }
 
 
 

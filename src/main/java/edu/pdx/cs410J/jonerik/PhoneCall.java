@@ -102,7 +102,16 @@ public class PhoneCall extends AbstractPhoneCall implements Comparable<PhoneCall
     }
 
 
+    /**
+     * Uses comparable implemented by the PhoneCall class.
+     * Compares PhoneCall first by startTime of the call
+     * and sorts chronologically, and then by callerNumber,
+     * from least to greatest.
+     * @param other a PhoneBill to compare the current bill
+     * @return return 0 if the PhoneCall is considered equal.
+     */
     public int compareTo(PhoneCall other){
+
         int firstCompare = startTime.compareTo(other.getStartTime());
         if (firstCompare != 0) { return firstCompare; }
 
