@@ -44,6 +44,7 @@ public class TextDumper implements PhoneBillDumper {
         call.writeBytes("\n");
 
         List <PhoneCall> temp = (List<PhoneCall>) var1.getPhoneCalls();
+
         //System.out.println(temp.get(0).getStartTimeString());
         for ( AbstractPhoneCall each : temp) {
 

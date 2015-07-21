@@ -72,7 +72,7 @@ public class PhoneCall extends AbstractPhoneCall{
      * file to print the phone call information to the console.
      */
     public String toString() {
-        return "Phone call from " + this.getCaller() + " to " + this.getCallee() + " from " + this.getStartTime().toString() + " to " + this.getEndTime().toString();
+        return "Phone call from " + this.getCaller() + " to " + this.getCallee() + " beginning on " + this.getStartTimeString() + " and ending " + this.getEndTimeString();
     }
 
     /**
@@ -92,9 +92,17 @@ public class PhoneCall extends AbstractPhoneCall{
 
         } catch(java.text.ParseException e) {
             System.err.println("Error in formatting date: " + e);
+            e.printStackTrace();
             System.exit(1);
         }
         return null;
+    }
+
+    public static Comparable<PhoneCall> compareStartDate(){
+
+
+
+
     }
 
 

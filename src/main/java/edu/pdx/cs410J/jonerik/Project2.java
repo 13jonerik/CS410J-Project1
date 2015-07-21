@@ -367,8 +367,8 @@ public class Project2 {
 
         String callerNumber = (String) callInfo.get(i++);
         String calleeNumber = (String) callInfo.get(i++);
-        String startTime    = callInfo.get(i++) + " " + callInfo.get(i++);
-        String endTime      = callInfo.get(i++) + " " + callInfo.get(i);
+        String startTime    = callInfo.get(i++) + " " + callInfo.get(i++) + " " + callInfo.get(i++);
+        String endTime      = callInfo.get(i++) + " " + callInfo.get(i++) + " " + callInfo.get(i);
 
         PhoneCall firstCall = new PhoneCall(callerNumber, calleeNumber,
                 startTime, endTime);
