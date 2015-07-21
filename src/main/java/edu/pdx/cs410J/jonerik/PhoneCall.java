@@ -13,15 +13,17 @@ import java.util.Date;
  * has a to and from number, and a
  * start and end time.
  */
-public class PhoneCall extends AbstractPhoneCall{
+public class PhoneCall extends AbstractPhoneCall implements Comparable<PhoneCall> {
 
 
     private String callerNumber;
     private String calleeNumber;
-    private String reserveDateFormat;
-    private String reserveDateFormat2;
+
     private Date startTime;
     private Date endTime;
+
+    //public Comparator<PhoneCall> phoneCallComparator = Comparator.comparing(PhoneCall::getStartTime)
+    //     .thenComparing(PhoneCall::getCaller);
 
 
     /**
@@ -83,6 +85,7 @@ public class PhoneCall extends AbstractPhoneCall{
      * will format into a date object in the constructor
      */
     public static Date formatDate(String d) {
+
         try {
             Date day = new SimpleDateFormat("MM/dd/yy hh:mm a").parse(d);
 
@@ -98,12 +101,12 @@ public class PhoneCall extends AbstractPhoneCall{
         return null;
     }
 
-    public static Comparable<PhoneCall> compareStartDate(){
 
-
-
+    public int compareTo(PhoneCall other){
+        return getStartTime().compareTo(other.getStartTime());
 
     }
+
 
 
 }

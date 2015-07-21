@@ -7,6 +7,7 @@ import edu.pdx.cs410J.PhoneBillDumper;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -44,6 +45,7 @@ public class TextDumper implements PhoneBillDumper {
         call.writeBytes("\n");
 
         List <PhoneCall> temp = (List<PhoneCall>) var1.getPhoneCalls();
+        Collections.sort(temp);
 
         //System.out.println(temp.get(0).getStartTimeString());
         for ( AbstractPhoneCall each : temp) {
@@ -57,4 +59,8 @@ public class TextDumper implements PhoneBillDumper {
         }
 
     }
+
+
+
+
 }
