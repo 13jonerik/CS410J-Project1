@@ -64,12 +64,12 @@ public class Project2 {
      */
     private static void checkNumArgs (ArrayList args) {
 
-        if (args.size() < 7) {
+        if (args.size() < 9) {
             System.err.println("Missing command line arguments");
             System.exit(1);
         }
 
-        if( args.size() > 11) {
+        if( args.size() > 13) {
             System.err.println("Too many command line arguments");
             System.exit(1);
         }
@@ -132,9 +132,9 @@ public class Project2 {
             String customer = (String) arguments.get(i++);
             String callerNumber = (String) arguments.get(i++);
             String calleeNumber = (String) arguments.get(i++);
-            String startTime = arguments.get(i++) + " " + arguments.get(i++);
-            String endTime = arguments.get(i++) + " " + arguments.get(i);
-
+            String startTime = arguments.get(i++) + " " + arguments.get(i++) + " " + arguments.get(i++);
+            String endTime = arguments.get(i++) + " " + arguments.get(i++) + " " + arguments.get(i);
+            //System.out.println(startTime);
 
             PhoneCall firstCall = new PhoneCall(callerNumber, calleeNumber,       // Create the phone call
                     startTime, endTime);
@@ -292,8 +292,8 @@ public class Project2 {
         String customer     = (String) callInfo.get(i++);
         String callerNumber = (String) callInfo.get(i++);
         String calleeNumber = (String) callInfo.get(i++);
-        String startTime    = callInfo.get(i++) + " " + callInfo.get(i++);
-        String endTime      = callInfo.get(i++) + " " + callInfo.get(i);
+        String startTime    = callInfo.get(i++) + " " + callInfo.get(i++) + " " + callInfo.get(i++);
+        String endTime      = callInfo.get(i++) + " " + callInfo.get(i++) + " " + callInfo.get(i);
 
         if (!customer.matches("[a-zA-Z\\s*' - - ! @ # $ % ^ & * ? 1 2 3 4 5 6 7 8 9 0 , .]+")) {         // "[\"][a-zA-Z]+[\"]"
             System.err.println("Customer Name Invalid");
@@ -304,10 +304,10 @@ public class Project2 {
         } else if (!calleeNumber.matches("[0-9]{3}[-][0-9]{3}[-][0-9]{4}")) {
             System.err.println("Callee Number Invalid");
             System.exit(1);
-        } else if (!startTime.matches("[0-9][0-9]{0,1}[/][0-9][0-9]{0,1}[/][0-9]{4}[\\s*][0-9][0-9]{0,1}[:][0-5][0-9]")) {
+        } else if (!startTime.matches("[0-9][0-9]{0,1}[/][0-9][0-9]{0,1}[/][0-9]{2}([0-9]{2})?[\\s*][0-9][0-9]{0,1}[:][0-5][0-9][\\s*][a-zA-Z]{2}")) {
             System.err.println("Start Time Invalid");
             System.exit(1);
-        } else if (!endTime.matches("[0-9][0-9]{0,1}[/][0-9][0-9]{0,1}[/][0-9]{4}[\\s*][0-9][0-9]{0,1}[:][0-5][0-9]")) {
+        } else if (!endTime.matches("[0-9][0-9]{0,1}[/][0-9][0-9]{0,1}[/][0-9]{2}([0-9]{2})?[\\s*][0-9][0-9]{0,1}[:][0-5][0-9][\\s*][a-zA-Z]{2}")) {
             System.err.println("End Time Invalid");
             System.exit(1);
         }

@@ -65,7 +65,7 @@ public class TextParser implements PhoneBillParser {
                         return bill;
                     }
                     if (!checkCall(split[0], split[1], split[2], split[3])) {
-                        throw new ParserException("The text file is malformatted. Please check the file" +
+                      throw new ParserException("The text file is malformatted. Please check the file" +
                                 " format and try running again.");
                     }
 
@@ -102,8 +102,8 @@ public class TextParser implements PhoneBillParser {
 
         if (!callerNumber.matches("[0-9]{3}[-][0-9]{3}[-][0-9]{4}")) { return false; }
         if (!calleeNumber.matches("[0-9]{3}[-][0-9]{3}[-][0-9]{4}")) { return false; }
-        if (!startTime.matches("[0-9][0-9]{0,1}[/][0-9][0-9]{0,1}[/][0-9]{4}[\\s*][0-9][0-9]{0,1}[:][0-5][0-9]")) { return false; }
-        if (!endTime.matches("[0-9][0-9]{0,1}[/][0-9][0-9]{0,1}[/][0-9]{4}[\\s*][0-9][0-9]{0,1}[:][0-5][0-9]")) { return false; }
+        if (!startTime.matches("[0-9][0-9]{0,1}[/][0-9][0-9]{0,1}[/][0-9]{2}([0-9]{2})?[\\s*][0-9][0-9]{0,1}[:][0-5][0-9][\\s*][a-zA-Z]{2}")) { return false; }
+        if (!endTime.matches("[0-9][0-9]{0,1}[/][0-9][0-9]{0,1}[/][0-9]{2}([0-9]{2})?[\\s*][0-9][0-9]{0,1}[:][0-5][0-9][\\s*][a-zA-Z]{2}")) { return false; }
         return true;
 
     }

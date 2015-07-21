@@ -44,12 +44,15 @@ public class TextDumper implements PhoneBillDumper {
         call.writeBytes("\n");
 
         List <PhoneCall> temp = (List<PhoneCall>) var1.getPhoneCalls();
+        //System.out.println(temp.get(0).getStartTimeString());
         for ( AbstractPhoneCall each : temp) {
-            String parse = String.valueOf(each);
 
+            String parse = String.valueOf(each);
+            System.out.println(parse);
             String[] parseCall = parse.split(" ");
-            call.writeBytes(parseCall[3] + "," + parseCall[5] + "," + (parseCall[7] + " " + parseCall[8]) +
-                    "," + (parseCall[10] + " " + parseCall[11] + "\n")); //.substring(0, (parseCall[11].length() - 1))));
+            call.writeBytes(each.getCaller() + "," + each.getCallee() + "," + each.getStartTimeString() +
+                    /*parseCall[10].substring(0, 5) + */"," + each.getEndTimeString() + /*" " +  parseCall[17].substring(0, 5) */ "\n");
+                    //"," + (parseCall[10] + " " + parseCall[11] + "\n")); //.substring(0, (parseCall[11].length() - 1))));
         }
 
     }

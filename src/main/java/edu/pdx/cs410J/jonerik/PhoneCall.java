@@ -2,8 +2,9 @@ package edu.pdx.cs410J.jonerik;
 
 import edu.pdx.cs410J.AbstractPhoneCall;
 
-import java.util.Date;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by jonerik13 on 7/6/15.
@@ -17,6 +18,8 @@ public class PhoneCall extends AbstractPhoneCall{
 
     private String callerNumber;
     private String calleeNumber;
+    private String reserveDateFormat;
+    private String reserveDateFormat2;
     private Date startTime;
     private Date endTime;
 
@@ -27,11 +30,11 @@ public class PhoneCall extends AbstractPhoneCall{
     public PhoneCall(String callerNumber, String calleeNumber,
                      String callTime, String endTime) {
 
+        this.callerNumber       = callerNumber;
+        this.calleeNumber       = calleeNumber;
 
-        this.callerNumber   = callerNumber;
-        this.calleeNumber   = calleeNumber;
-        this.startTime      = formatDate(callTime);
-        this.endTime        = formatDate(endTime);
+        this.startTime          = formatDate(callTime);
+        this.endTime            = formatDate(endTime);
 
     }
 
@@ -44,27 +47,32 @@ public class PhoneCall extends AbstractPhoneCall{
     }
 
     public Date getStartTime() {
-        return getStartTime();
+        return startTime;
     }
 
     public String getStartTimeString() {
-        return startTime.toString();
+        String shortDate = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(startTime);
+        //System.out.println(shortDate);
+        return shortDate;
     }
 
     public Date getEndTime() {
-        return getEndTime();
+        return endTime;
     }
 
     public String getEndTimeString(){
-        return endTime.toString();
+        String shortDate = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(endTime);
+        //System.out.println(shortDate);
+        return shortDate;
     }
+
 
     /**
      * The toString method is used in the -print argument for Project2
      * file to print the phone call information to the console.
      */
     public String toString() {
-        return "Phone call from " + this.getCaller() + " to " + this.getCallee() + " from " + this.getStartTimeString() + " to " + this.getEndTimeString();
+        return "Phone call from " + this.getCaller() + " to " + this.getCallee() + " from " + this.getStartTime().toString() + " to " + this.getEndTime().toString();
     }
 
     /**
@@ -74,14 +82,16 @@ public class PhoneCall extends AbstractPhoneCall{
      * takes in strings as arguments and this function
      * will format into a date object in the constructor
      */
-    public static Date formatDate(String date) {
-        DateFormat d = DateFormat.getDateInstance(DateFormat.SHORT);
-
+    public static Date formatDate(String d) {
         try {
-            Date myDate = d.parse(date);
-            return myDate;
+            Date day = new SimpleDateFormat("MM/dd/yy hh:mm a").parse(d);
+
+            System.out.println(day);
+
+            return day;
+
         } catch(java.text.ParseException e) {
-            System.err.println("ERROR IN DATE PARSE");
+            System.err.println("Error in formatting date: " + e);
             System.exit(1);
         }
         return null;
