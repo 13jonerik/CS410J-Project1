@@ -53,16 +53,11 @@ public class TextDumper implements PhoneBillDumper {
 
         Collections.sort(temp);
 
-        // remove duplicate calls from PhoneBill
-        //List <PhoneCall> removeDup = new ArrayList();
 
-
-        //System.out.println(temp.get(0).getStartTimeString());
         for ( AbstractPhoneCall each : temp) {
 
             String parse = String.valueOf(each);
-            System.out.println(parse);
-            String[] parseCall = parse.split(" ");
+
             call.writeBytes(each.getCaller() + "," + each.getCallee() + "," + each.getStartTimeString() +
                     /*parseCall[10].substring(0, 5) + */"," + each.getEndTimeString() + /*" " +  parseCall[17].substring(0, 5) */ "\n");
                     //"," + (parseCall[10] + " " + parseCall[11] + "\n")); //.substring(0, (parseCall[11].length() - 1))));
