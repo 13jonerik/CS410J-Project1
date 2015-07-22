@@ -1,7 +1,6 @@
 package edu.pdx.cs410J.jonerik;
 
 import edu.pdx.cs410J.AbstractPhoneCall;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -15,16 +14,11 @@ import java.util.Date;
  */
 public class PhoneCall extends AbstractPhoneCall implements Comparable<PhoneCall> {
 
-
     private String callerNumber;
     private String calleeNumber;
 
     private Date startTime;
     private Date endTime;
-
-    //public Comparator<PhoneCall> phoneCallComparator = Comparator.comparing(PhoneCall::getStartTime)
-    //     .thenComparing(PhoneCall::getCaller);
-
 
     /**
      * Constructor for the PhoneCall
@@ -54,7 +48,6 @@ public class PhoneCall extends AbstractPhoneCall implements Comparable<PhoneCall
 
     public String getStartTimeString() {
         String shortDate = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(startTime);
-        //System.out.println(shortDate);
         return shortDate;
     }
 
@@ -64,7 +57,6 @@ public class PhoneCall extends AbstractPhoneCall implements Comparable<PhoneCall
 
     public String getEndTimeString(){
         String shortDate = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(endTime);
-        //System.out.println(shortDate);
         return shortDate;
     }
 

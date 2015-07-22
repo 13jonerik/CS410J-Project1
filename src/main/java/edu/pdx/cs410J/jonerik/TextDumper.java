@@ -39,6 +39,7 @@ public class TextDumper implements PhoneBillDumper {
      * @param var1
      * @throws IOException
      */
+
     public void dump(AbstractPhoneBill var1) throws IOException {
 
         call.writeBytes(String.valueOf(var1.getCustomer()));
@@ -51,9 +52,6 @@ public class TextDumper implements PhoneBillDumper {
         temp = removeDuplicates(temp, length);
 
         Collections.sort(temp);
-
-
-
 
         // remove duplicate calls from PhoneBill
         //List <PhoneCall> removeDup = new ArrayList();

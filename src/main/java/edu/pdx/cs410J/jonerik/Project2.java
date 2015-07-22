@@ -25,12 +25,25 @@ import java.text.SimpleDateFormat;
  * etc.
  *
  */
+
+
 public class Project2 {
+
+    static String prettyFile   = "";
+    static boolean prettify    = false;
 
     public static void main(String[] args) {
         Class c = AbstractPhoneBill.class;  // Refer to one of Dave's classes so that we can be sure it is on the classpath
 
+
         ArrayList arguments = new ArrayList<String>(Arrays.asList(args));
+        if (arguments.contains("-pretty")) {
+            prettyFile  = (String) arguments.get(1);
+            prettify    = true;
+            arguments.remove(0);
+            arguments.remove(0);
+        }
+
 
         checkZeroArgs(arguments);
         checkForReadMe(arguments);
@@ -134,7 +147,7 @@ public class Project2 {
             String calleeNumber = (String) arguments.get(i++);
             String startTime = arguments.get(i++) + " " + arguments.get(i++) + " " + arguments.get(i++);
             String endTime = arguments.get(i++) + " " + arguments.get(i++) + " " + arguments.get(i);
-            //System.out.println(startTime);
+
 
             PhoneCall firstCall = new PhoneCall(callerNumber, calleeNumber,       // Create the phone call
                     startTime, endTime);
@@ -200,6 +213,7 @@ public class Project2 {
 
         DataOutputStream    stream;
         DataInputStream     stream2;
+        DataOutputStream    prettyPrintStream;
 
         try {
 
@@ -224,6 +238,13 @@ public class Project2 {
                 TextDumper dumper = new TextDumper(stream);
                 dumper.dump(bill);
                 stream.close();
+
+                if (prettify) {
+                    prettyPrintStream = new DataOutputStream(new FileOutputStream(prettyFile));
+                    PrettyPrinter printer = new PrettyPrinter((prettyPrintStream));
+                    printer.dump(bill);
+                    prettyPrintStream.close();
+                }
 
             } catch (ParserException e) {
                 System.err.println(e.getMessage());
@@ -251,6 +272,8 @@ public class Project2 {
         PhoneBill newBill = new PhoneBill(args);
 
         DataOutputStream stream;
+        DataOutputStream prettyPrintStream;
+
         try {
             try {
                 file.createNewFile();
@@ -263,6 +286,12 @@ public class Project2 {
                 dumper.dump(newBill);
                 stream.close();
 
+                if (prettify) {
+                    prettyPrintStream = new DataOutputStream(new FileOutputStream(prettyFile));
+                    PrettyPrinter printer = new PrettyPrinter((prettyPrintStream));
+                    printer.dump(newBill);
+                    prettyPrintStream.close();
+                }
 
             } catch (IOException e) {
                 throw new ParserException("Error in writing to empty file.", e);
