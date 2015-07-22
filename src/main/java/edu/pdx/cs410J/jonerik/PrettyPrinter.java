@@ -32,11 +32,51 @@ public class PrettyPrinter implements PhoneBillDumper {
     @Override
     public void dump(AbstractPhoneBill bill) throws IOException {
 
-        String formatString = "%70s";
+        String formatString = "%77s";
 
-        call.writeBytes(String.format(formatString, String.valueOf(bill.getCustomer()) + "'s Phone Bill"));
+        call.writeBytes(String.format(formatString, String.valueOf("*** " + bill.getCustomer()) + "'s Phone Bill ***"));
         call.writeBytes("\n\n");
 
+        List<PhoneCall> temp = (List<PhoneCall>) bill.getPhoneCalls();
+        int length = temp.size();
+        temp = removeDuplicates(temp, length);
+
+        Collections.sort(temp);
+
+        formatString = "%-15s %-5s %-10s %-5s %-15s %-5s %-13s %-18s %s%n";
+
+        call.writeBytes(String.format(formatString, "    Caller", "|", "Callee", "|", "Start Time", "|", "End Time", "|", "Duration"));
+        call.writeBytes("-------------------------------------------------------"
+                + "---------------------------------------------------------------\n");
+
+
+        formatString = "%-15s %-2s %-13s %-2s %-18s %-2s %-16s %-2s %s%n";
+
+        for (AbstractPhoneCall each : temp) {
+
+            Long duration = Math.abs(each.getStartTime().getTime() - each.getEndTime().getTime());
+            Long durationHours      = TimeUnit.MILLISECONDS.toHours(duration);
+            Long durationMins       = TimeUnit.MILLISECONDS.toMinutes(duration);
+            durationMins = durationMins % 60;
+
+
+            call.writeBytes(String.format(formatString,  "  " + each.getCaller(), "|", each.getCallee(), "|",
+                    each.getStartTimeString(), "|", each.getEndTimeString(), "|",
+                    " -> Duration: " + durationHours + " Hours and " + durationMins + " minutes!"));
+            call.writeBytes("---------------------------------------------------------------------------" +
+                    "-------------------------------------------\n");
+        }
+
+
+    }
+
+    public void dumpToConsole(AbstractPhoneBill bill) {
+
+
+        String formatString = "%77s";
+
+        Print(String.format(formatString, String.valueOf("*** " + bill.getCustomer()) + "'s Phone Bill ***"));
+        Print("\n\n");
 
         List<PhoneCall> temp = (List<PhoneCall>) bill.getPhoneCalls();
 
@@ -48,9 +88,10 @@ public class PrettyPrinter implements PhoneBillDumper {
 
         formatString = "%-15s %-5s %-10s %-5s %-15s %-5s %-13s %-18s %s%n";
 
-        call.writeBytes(String.format(formatString, "    Caller", "|",  "Callee", "|" , "Start Time",  "|" , "End Time", "|", "Duration"));
+        Print(String.format(formatString, "    Caller", "|", "Callee", "|", "Start Time", "|", "End Time", "|", "Duration"));
 
-        call.writeBytes("----------------------------------------------------------------------------------------------------------------------\n");
+        Print("----------------------------------------------------------------"
+                + "------------------------------------------------------\n");
 
         formatString = "%-15s %-2s %-13s %-2s %-18s %-2s %-16s %-2s %s%n";
 
@@ -64,14 +105,22 @@ public class PrettyPrinter implements PhoneBillDumper {
             durationMins = durationMins % 60;
 
 
-            call.writeBytes(String.format(formatString,  "  " + each.getCaller(), "|", each.getCallee(), "|",
+            Print(String.format(formatString,  "  " + each.getCaller(), "|", each.getCallee(), "|",
                     each.getStartTimeString(), "|", each.getEndTimeString(), "|",
                     " -> Duration: " + durationHours + " Hours and " + durationMins + " minutes!"));
-            call.writeBytes("----------------------------------------------------------------------------------------------------------------------\n");
+            Print("--------------------------------------------------------------"
+                    + "--------------------------------------------------------\n");
         }
 
 
+
+
+
+
+
+
     }
+
 
     public List<PhoneCall> removeDuplicates(List<PhoneCall> temp, int length) {
         if (length > 1) {
@@ -92,6 +141,10 @@ public class PrettyPrinter implements PhoneBillDumper {
     }
 
 
+
+    public static void Print(String str){
+        System.out.println(str);
+    }
 
 
 }

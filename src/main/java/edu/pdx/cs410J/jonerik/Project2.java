@@ -31,6 +31,7 @@ public class Project2 {
 
     static String prettyFile   = "";
     static boolean prettify    = false;
+    static boolean console     = false;
 
     public static void main(String[] args) {
         Class c = AbstractPhoneBill.class;  // Refer to one of Dave's classes so that we can be sure it is on the classpath
@@ -38,6 +39,7 @@ public class Project2 {
         ArrayList arguments = new ArrayList<String>(Arrays.asList(args));
         if (arguments.contains("-pretty")) {
             prettyFile  = (String) arguments.get(1);
+            if (prettyFile.equals("-")) { console = true; }
             prettify    = true;
             arguments.remove(0);
             arguments.remove(0);
@@ -238,10 +240,13 @@ public class Project2 {
                 stream.close();
 
                 if (prettify) {
+
                     prettyPrintStream = new DataOutputStream(new FileOutputStream(prettyFile));
                     PrettyPrinter printer = new PrettyPrinter((prettyPrintStream));
-                    printer.dump(bill);
+                    if (console) { printer.dumpToConsole(bill); }
+                    else { printer.dump(bill); }
                     prettyPrintStream.close();
+
                 }
 
             } catch (ParserException e) {

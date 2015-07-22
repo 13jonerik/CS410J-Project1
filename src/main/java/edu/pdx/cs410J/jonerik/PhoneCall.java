@@ -47,9 +47,8 @@ public class PhoneCall extends AbstractPhoneCall implements Comparable<PhoneCall
     }
 
     public String getStartTimeString() {
-
-        DateFormat shortDate = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
-        return shortDate.format(startTime);
+        //DateFormat format = SimpleDateFormat("MM/dd/yyyy hh:mm a").parse(startTime);
+        return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(startTime);
 
         /*
         String shortDate = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(startTime);
@@ -63,8 +62,7 @@ public class PhoneCall extends AbstractPhoneCall implements Comparable<PhoneCall
     }
 
     public String getEndTimeString(){
-        String shortDate = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(endTime);
-        return shortDate;
+        return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(endTime);
     }
 
 
@@ -86,11 +84,8 @@ public class PhoneCall extends AbstractPhoneCall implements Comparable<PhoneCall
     public static Date formatDate(String d) {
 
         try {
-            Date day = new SimpleDateFormat("MM/dd/yyyy hh:mm a").parse(d);
 
-            System.out.println(day);
-
-            return day;
+            return new SimpleDateFormat("MM/dd/yyyy hh:mm a").parse(d);
 
         } catch(java.text.ParseException e) {
             System.err.println("Error in formatting date: " + e);
