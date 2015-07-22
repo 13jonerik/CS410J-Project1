@@ -8,6 +8,8 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import java.lang.String;
+
 
 /**
  * Created by jonerik13 on 7/21/15.
@@ -29,9 +31,10 @@ public class PrettyPrinter implements PhoneBillDumper {
     @Override
     public void dump(AbstractPhoneBill bill) throws IOException {
 
-
-        call.writeBytes(String.valueOf(bill.getCustomer()));
+        String formatString = "%55s";
+        call.writeBytes(String.format(formatString, String.valueOf(bill.getCustomer()) + "'s Phone Bill"));
         call.writeBytes("\n");
+        call.writeBytes("********************************************************************************************\n");
 
         List<PhoneCall> temp = (List<PhoneCall>) bill.getPhoneCalls();
 
@@ -41,17 +44,22 @@ public class PrettyPrinter implements PhoneBillDumper {
 
         Collections.sort(temp);
 
+        formatString = "%s\t|\t\t%s\t|\t\t%s\t|\t\t%s%n";
+        //output.write(String.format(formatStr, aName, aObjRef, aValue, strDate, note));
 
-        //System.out.println(temp.get(0).getStartTimeString());
         for (AbstractPhoneCall each : temp) {
 
             String parse = String.valueOf(each);
-            System.out.println(parse);
+
+
+
+            System.out.println("");
             String[] parseCall = parse.split(" ");
-            call.writeBytes(each.getCaller() + "," + each.getCallee() + "," + each.getStartTimeString() +
-                    /*parseCall[10].substring(0, 5) + */"," + each.getEndTimeString() + /*" " +  parseCall[17].substring(0, 5) */ "\n");
-            //"," + (parseCall[10] + " " + parseCall[11] + "\n")); //.substring(0, (parseCall[11].length() - 1))));
+            call.writeBytes(String.format(formatString, "*  " + each.getCaller(), each.getCallee(), each.getStartTimeString(), each.getEndTimeString() + "   *"));
+
         }
+
+        call.writeBytes("********************************************************************************************\n");
 
     }
 
