@@ -35,7 +35,6 @@ public class Project2 {
     public static void main(String[] args) {
         Class c = AbstractPhoneBill.class;  // Refer to one of Dave's classes so that we can be sure it is on the classpath
 
-
         ArrayList arguments = new ArrayList<String>(Arrays.asList(args));
         if (arguments.contains("-pretty")) {
             prettyFile  = (String) arguments.get(1);
@@ -43,7 +42,6 @@ public class Project2 {
             arguments.remove(0);
             arguments.remove(0);
         }
-
 
         checkZeroArgs(arguments);
         checkForReadMe(arguments);

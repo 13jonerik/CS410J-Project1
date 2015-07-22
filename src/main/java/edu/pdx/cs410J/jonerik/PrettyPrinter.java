@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.lang.String;
+import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -32,6 +33,7 @@ public class PrettyPrinter implements PhoneBillDumper {
     public void dump(AbstractPhoneBill bill) throws IOException {
 
         String formatString = "%55s";
+
         call.writeBytes(String.format(formatString, String.valueOf(bill.getCustomer()) + "'s Phone Bill"));
         call.writeBytes("\n");
         call.writeBytes("********************************************************************************************\n");
@@ -45,21 +47,29 @@ public class PrettyPrinter implements PhoneBillDumper {
         Collections.sort(temp);
 
         formatString = "%s\t|\t\t%s\t|\t\t%s\t|\t\t%s%n";
-        //output.write(String.format(formatStr, aName, aObjRef, aValue, strDate, note));
+
+        call.writeBytes(String.format(formatString, "\tCaller\t", "\tCallee\t", "\tStart Time\t", "\tEnd Time\t"));
 
         for (AbstractPhoneCall each : temp) {
 
             String parse = String.valueOf(each);
 
+            Long duration = Math.abs(each.getStartTime().getTime() - each.getEndTime().getTime());
 
+            Long durationHours      = TimeUnit.MILLISECONDS.toHours(duration);
+            Long durationMins       = TimeUnit.MILLISECONDS.toMinutes(duration);
 
-            System.out.println("");
-            String[] parseCall = parse.split(" ");
-            call.writeBytes(String.format(formatString, "*  " + each.getCaller(), each.getCallee(), each.getStartTimeString(), each.getEndTimeString() + "   *"));
+            durationMins = durationMins % 60;
+
+            System.out.println(duration);
+
+            call.writeBytes(String.format(formatString, "*  " + each.getCaller(), each.getCallee(),
+                    each.getStartTimeString() + "\t", each.getEndTimeString() + "\t" +
+                    " -> Duration: " + durationHours + " Hours and " + durationMins + " minutes   *"));
 
         }
 
-        call.writeBytes("********************************************************************************************\n");
+        call.writeBytes("************************************************************************************\n");
 
     }
 
