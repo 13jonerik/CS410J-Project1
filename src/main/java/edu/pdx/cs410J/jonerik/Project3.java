@@ -27,7 +27,7 @@ import java.text.SimpleDateFormat;
  */
 
 
-public class Project2 {
+public class Project3 {
 
     /**
      * These booleans are helpers to simplify
