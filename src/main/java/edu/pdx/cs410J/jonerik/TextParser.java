@@ -25,7 +25,6 @@ public class TextParser implements PhoneBillParser {
     /**
      * Constructor for TextParser class. Takes
      * in a DataInputStream to parse the file.
-     * @param call
      */
     public TextParser (DataInputStream call) {
         this.call = call;
@@ -37,8 +36,6 @@ public class TextParser implements PhoneBillParser {
      * read the contents of a text file, checking if they
      * are well formed, and then add the customer name and
      * the phone call fields to a phone bill.
-     * @return
-     * @throws ParserException
      */
     public AbstractPhoneBill parse() throws ParserException {
         AbstractPhoneBill phoneBill = null;
@@ -91,11 +88,6 @@ public class TextParser implements PhoneBillParser {
      * the text file. Return false if the arguments do not match the
      * same requirements for the command line arguments. Return true
      * if the incoming arguments are all well formed.
-     * @param callerNumber
-     * @param calleeNumber
-     * @param startTime
-     * @param endTime
-     * @return
      */
     public boolean checkCall (String callerNumber, String calleeNumber, String startTime, String endTime) {
 

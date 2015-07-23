@@ -13,7 +13,9 @@ import java.util.concurrent.TimeUnit;
 
 
 /**
- * Created by jonerik13 on 7/21/15.
+ * The Pretty Printer is used to format a phone bill
+ * too look like a bill you would see in real life,
+ * thus making the phone bill information look nice.
  */
 public class PrettyPrinter implements PhoneBillDumper {
 
@@ -29,7 +31,12 @@ public class PrettyPrinter implements PhoneBillDumper {
     }
 
 
-    @Override
+    /**
+     * This dump function takes in a phone bill and dumps it to a file
+     * much like the text dumper, but this time in a pretty format like
+     * one you would see in the real world. Dumps to a file that is
+     * passed in with the constructor of PrettyPrinter
+     */
     public void dump(AbstractPhoneBill bill) throws IOException {
 
         String formatString = "%77s";
@@ -70,8 +77,11 @@ public class PrettyPrinter implements PhoneBillDumper {
 
     }
 
+    /**
+     * This version of the dumper formats the bill the same way as above,
+     * but this time outputs to the console.
+     */
     public void dumpToConsole(AbstractPhoneBill bill) {
-
 
         String formatString = "%77s";
 
@@ -105,23 +115,21 @@ public class PrettyPrinter implements PhoneBillDumper {
             durationMins = durationMins % 60;
 
 
-            Print(String.format(formatString,  "  " + each.getCaller(), "|", each.getCallee(), "|",
+            Print(String.format(formatString, "  " + each.getCaller(), "|", each.getCallee(), "|",
                     each.getStartTimeString(), "|", each.getEndTimeString(), "|",
                     " -> Duration: " + durationHours + " Hours and " + durationMins + " minutes!"));
             Print("--------------------------------------------------------------"
                     + "--------------------------------------------------------\n");
         }
 
-
-
-
-
-
-
-
     }
 
-
+    /**
+     * This helper function takes in the list of phone calls and returns
+     * a new list, but without duplicates. A phone call is considered a
+     * duplicate if it has the same start time and the same caller
+     * number.
+     */
     public List<PhoneCall> removeDuplicates(List<PhoneCall> temp, int length) {
         if (length > 1) {
             for (int i = 0; i < length; i++) {
@@ -141,7 +149,9 @@ public class PrettyPrinter implements PhoneBillDumper {
     }
 
 
-
+    /**
+     * Helper print function
+     */
     public static void Print(String str){
         System.out.println(str);
     }

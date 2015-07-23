@@ -47,14 +47,7 @@ public class PhoneCall extends AbstractPhoneCall implements Comparable<PhoneCall
     }
 
     public String getStartTimeString() {
-        //DateFormat format = SimpleDateFormat("MM/dd/yyyy hh:mm a").parse(startTime);
         return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(startTime);
-
-        /*
-        String shortDate = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(startTime);
-        return shortDate;
-        */
-
     }
 
     public Date getEndTime() {

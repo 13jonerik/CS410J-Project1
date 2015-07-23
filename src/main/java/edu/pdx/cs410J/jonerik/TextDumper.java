@@ -23,7 +23,6 @@ public class TextDumper implements PhoneBillDumper {
 
     /**
      * Constructor for the TextDumper
-     * @param call
      */
     public TextDumper(DataOutputStream call) {
         this.call = call;
@@ -36,8 +35,6 @@ public class TextDumper implements PhoneBillDumper {
      * a collection maintained by the phoneBill class into a
      * new list. It then iterates through the calls and dumps
      * them to the file in the correct format.
-     * @param var1
-     * @throws IOException
      */
 
     public void dump(AbstractPhoneBill var1) throws IOException {
@@ -61,6 +58,12 @@ public class TextDumper implements PhoneBillDumper {
 
     }
 
+    /**
+     * This helper function takes in the list of phone calls and returns
+     * a new list, but without duplicates. A phone call is considered a
+     * duplicate if it has the same start time and the same caller
+     * number.
+     */
     public List<PhoneCall> removeDuplicates(List<PhoneCall> temp, int length) {
       if (length > 1) {
           for (int i = 0; i < length; i++) {

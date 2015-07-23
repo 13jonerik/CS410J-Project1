@@ -29,9 +29,17 @@ import java.text.SimpleDateFormat;
 
 public class Project2 {
 
+    /**
+     * These booleans are helpers to simplify
+     * the code and to make code more reusable.
+     * In later iterations, may refactor the code
+     * to support pretty print without a class
+     * global.
+     */
     static String prettyFile   = "";
     static boolean prettify    = false;
     static boolean console     = false;
+    static boolean textFileOption    = false;
 
     public static void main(String[] args) {
         Class c = AbstractPhoneBill.class;  // Refer to one of Dave's classes so that we can be sure it is on the classpath
@@ -45,10 +53,20 @@ public class Project2 {
             arguments.remove(0);
         }
 
+        if (arguments.contains("-textFile")) {
+            textFileOption = true;
+        }
+
         checkZeroArgs(arguments);
         checkForReadMe(arguments);
         checkNumArgs(arguments);
-        arguments = checkForFileOption(arguments);
+
+        if (textFileOption) {
+            arguments = checkForFileOption(arguments);
+        }
+
+        if (prettify) { prettyWithoutFileOption(arguments); }
+
         arguments = checkForPrint(arguments);
 
         System.exit(0);
@@ -109,8 +127,6 @@ public class Project2 {
 
     /**
      * Check for the print command in the arrayList of args
-     * @param args
-     * @return
      */
     private static ArrayList checkForPrint(ArrayList args) {
 
@@ -200,14 +216,71 @@ public class Project2 {
     }
 
     /**
+     * This function is a helper function to make sure that
+     * the pretty print is executed without the file option
+     * present in the arguments. The previous implementation
+     * used all of the resources of the file option to pretty
+     * print, so this function is executed if that option is
+     * not present. The function creates a call from the CL
+     * and adds it to a bill, and then executes pretty print.
+     */
+    public static void prettyWithoutFileOption(ArrayList arguments) {
+
+        DataOutputStream    prettyPrintStream;
+
+        if (prettify) {
+
+            int i = 0;
+
+            if (arguments.contains("-print")) {
+                ++i;
+            }
+
+            String customer = (String) arguments.get(i++);
+            String callerNumber = (String) arguments.get(i++);
+            String calleeNumber = (String) arguments.get(i++);
+            String startTime = arguments.get(i++) + " " + arguments.get(i++) + " " + arguments.get(i++);
+            String endTime = arguments.get(i++) + " " + arguments.get(i++) + " " + arguments.get(i);
+
+
+            PhoneCall firstCall = new PhoneCall(callerNumber, calleeNumber,       // Create the phone call
+                    startTime, endTime);
+
+            AbstractPhoneBill bill = new PhoneBill(customer);
+            bill.addPhoneCall(firstCall);
+
+                try {
+
+                    File file = new File(prettyFile);
+                    if (!file.exists()) {
+                        file.createNewFile();
+                    }
+
+                    prettyPrintStream = new DataOutputStream(new FileOutputStream(prettyFile));
+
+                    PrettyPrinter printer = new PrettyPrinter((prettyPrintStream));
+                    if (console) {
+                        printer.dumpToConsole(bill);
+                    } else {
+                        printer.dump(bill);
+                    }
+                    prettyPrintStream.close();
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
+        }
+
+    }
+
+    /**
      * Open a text file with the fileName from the command line and add the
      * customer name and call from the file to a phoneBill on success. Make
      * sure that the name on the phoneBill matches the name from the CL and
      * then dump the contents of the file, along with the new call back to
      * the given file.
-     * @param fileName
-     * @param addCall
-     * @param customer
      */
     public static void parseAndDump(String fileName, PhoneCall addCall, String customer) {
 
@@ -246,6 +319,7 @@ public class Project2 {
                     if (console) { printer.dumpToConsole(bill); }
                     else { printer.dump(bill); }
                     prettyPrintStream.close();
+                    prettify = false;
 
                 }
 
@@ -265,10 +339,6 @@ public class Project2 {
      * If the file either does not exist, or is empty, use this function to
      * create a file and dump the command line call into the file, along
      * with the name in the correct format.
-     * @param file
-     * @param fileName
-     * @param addCall
-     * @param args
      */
     public static void writeToEmptyFile(File file, String fileName, PhoneCall addCall, String args) {
 
@@ -282,7 +352,6 @@ public class Project2 {
                 file.createNewFile();
 
                 newBill.addPhoneCall(addCall);
-
 
                 stream = new DataOutputStream(new FileOutputStream(fileName));
                 TextDumper dumper = new TextDumper(stream);
@@ -317,7 +386,6 @@ public class Project2 {
 
         int i = 0;
         if (callInfo.contains("-print")) {
-            //callInfo.remove(callInfo.indexOf("-print"));
             i += 1;
         }
 
@@ -327,7 +395,7 @@ public class Project2 {
         String startTime    = callInfo.get(i++) + " " + callInfo.get(i++) + " " + callInfo.get(i++);
         String endTime      = callInfo.get(i++) + " " + callInfo.get(i++) + " " + callInfo.get(i);
 
-        if (!customer.matches("[a-zA-Z\\s*' - - ! @ # $ % ^ & * ? 1 2 3 4 5 6 7 8 9 0 , .]+")) {         // "[\"][a-zA-Z]+[\"]"
+        if (!customer.matches("[a-zA-Z\\s*' - - ! @ # $ % ^ & * ? 1 2 3 4 5 6 7 8 9 0 , .]+")) {
             System.err.println("Customer Name Invalid");
             System.exit(1);
         } else if (!callerNumber.matches("[0-9]{3}[-][0-9]{3}[-][0-9]{4}")) {
@@ -336,16 +404,15 @@ public class Project2 {
         } else if (!calleeNumber.matches("[0-9]{3}[-][0-9]{3}[-][0-9]{4}")) {
             System.err.println("Callee Number Invalid");
             System.exit(1);
-        } else if (!startTime.matches("[0-9][0-9]{0,1}[/][0-9][0-9]{0,1}[/][0-9]{2}([0-9]{2})?[\\s*][0-9][0-9]{0,1}[:][0-5][0-9][\\s*][a-zA-Z]{2}")) {
+        } else if (!startTime.matches("(0?[1-9]|1[012])/(0?[1-9]|[12][0-9]|3[01])/[0-9]{2}([0-9]{2})?[\\s*][0-9][0-2]{0,1}[:][0-5][0-9][\\s*]((A|a|P|p))(M|m)")) {
             System.err.println("Start Time Invalid");
             System.exit(1);
-        } else if (!endTime.matches("[0-9][0-9]{0,1}[/][0-9][0-9]{0,1}[/][0-9]{2}([0-9]{2})?[\\s*][0-9][0-9]{0,1}[:][0-5][0-9][\\s*][a-zA-Z]{2}")) {
+        } else if (!endTime.matches("(0?[1-9]|1[012])/(0?[1-9]|[12][0-9]|3[01])/[0-9]{2}([0-9]{2})?[\\s*][0-9][0-2]{0,1}[:][0-5][0-9][\\s*]((A|a|P|p))(M|m)")) {
             System.err.println("End Time Invalid");
             System.exit(1);
         }
 
         return true;
-
     }
 
 
@@ -382,7 +449,6 @@ public class Project2 {
 
     }
 
-
     /**
      * printCall function turns the ArrayList of command line
      * args back into strings and fixes the startTime and 
@@ -393,7 +459,7 @@ public class Project2 {
     private static void printCall(ArrayList callInfo){
 
         int i = 1;
-        if (callInfo.contains("-fileName")){
+        if (callInfo.contains("-textFile")){
             i += 2;
         }
 
