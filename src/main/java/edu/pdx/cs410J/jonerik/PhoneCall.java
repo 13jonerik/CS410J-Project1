@@ -60,7 +60,7 @@ public class PhoneCall extends AbstractPhoneCall implements Comparable<PhoneCall
 
 
     /**
-     * The toString method is used in the -print argument for Project3
+     * The toString method is used in the -print argument for Project4
      * file to print the phone call information to the console.
      */
     public String toString() {
