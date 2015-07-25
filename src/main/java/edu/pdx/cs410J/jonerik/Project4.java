@@ -75,6 +75,7 @@ public class Project4 {
 
     /**
      * Check to see if the user forgot to enter commandline args
+     * if not exit
      */
     private static void checkZeroArgs(ArrayList args){
 
