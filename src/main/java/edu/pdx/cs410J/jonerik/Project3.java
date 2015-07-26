@@ -41,6 +41,7 @@ public class Project3 {
     static boolean prettify         = false;
     static boolean console          = false;
     static boolean textFileOption   = false;
+    static boolean printOption      = false;
 
     public static void main(String[] args) {
         Class c = AbstractPhoneBill.class;  // Refer to one of Dave's classes so that we can be sure it is on the classpath
@@ -69,17 +70,24 @@ public class Project3 {
 
     public static ArrayList setArgs(ArrayList args) {
         if (args.contains("-textFile")) {
-            textFile = (String) args.get(1);
-            args.remove(0);
-            args.remove(0);
+            int i = args.indexOf("-textFile");
+            textFile = (String) args.get(i+1);
+            args.remove(i);
+            args.remove(i);
         }
 
         if (args.contains("-pretty")) {
-            prettyFile = (String) args.get(1);
+            int i = args.indexOf("-pretty");
+            prettyFile = (String) args.get(i+1);
             if (prettyFile.equals("-")) { console = true; }
-            args.remove(0);
-            args.remove(0);
+            args.remove(i);
+            args.remove(i);
             prettify = true;
+        }
+
+        if (args.contains("-print")) {
+            printOption = true;
+            args.remove(args.indexOf("-print"));
         }
 
         return args;
@@ -146,8 +154,7 @@ public class Project3 {
      */
     private static ArrayList checkForPrint(ArrayList args) {
 
-        if (args.contains("-print")) {
-            args.remove(args.indexOf("-print"));
+        if (args.contains(printOption)) {
             if (validateCall(args)) {
                 printCall(args);
 
@@ -165,14 +172,11 @@ public class Project3 {
      */
     public static ArrayList checkForFileOption(ArrayList arguments) {
 
-        if (arguments.contains("-textFile")) {
+        if (textFileOption) {
 
-            int i = 1;
-            String fileName = (String) arguments.get(i++);
+            int i = 0;
+            String fileName = textFile;
 
-            if (arguments.contains("-print")) {
-                ++i;
-            }
 
             String customer = (String) arguments.get(i++);
             String callerNumber = (String) arguments.get(i++);
@@ -184,9 +188,6 @@ public class Project3 {
             PhoneCall firstCall = new PhoneCall(callerNumber, calleeNumber,       // Create the phone call
                     startTime, endTime);
 
-
-            arguments.remove(arguments.indexOf("-textFile"));
-            arguments.remove(arguments.indexOf(fileName));
 
             // validate args without throwing whole program
             validateCall(arguments);
@@ -209,8 +210,6 @@ public class Project3 {
      */
     public static void readPhoneBillFile(String fileName, PhoneCall addCall, ArrayList args) {
 
-        int i = 0;
-        if(args.contains("-print")) { ++i; }
 
         try {
             File file = new File(fileName);
@@ -219,11 +218,11 @@ public class Project3 {
             }
 
             if (file.length() <= 0) {
-                writeToEmptyFile(file, fileName, addCall, args.get(i).toString());
+                writeToEmptyFile(file, fileName, addCall, args.get(0).toString());
                 return;
             }
 
-            parseAndDump(fileName, addCall, args.get(i).toString());
+            parseAndDump(fileName, addCall, args.get(0).toString());
 
         } catch (IOException e){
             e.printStackTrace();
@@ -247,10 +246,6 @@ public class Project3 {
         if (prettify) {
 
             int i = 0;
-
-            if (arguments.contains("-print")) {
-                ++i;
-            }
 
             String customer = (String) arguments.get(i++);
             String callerNumber = (String) arguments.get(i++);
@@ -379,6 +374,7 @@ public class Project3 {
                     PrettyPrinter printer = new PrettyPrinter((prettyPrintStream));
                     printer.dump(newBill);
                     prettyPrintStream.close();
+                    prettify = false;
                 }
 
             } catch (IOException e) {
@@ -401,9 +397,6 @@ public class Project3 {
     private static boolean validateCall(ArrayList callInfo){
 
         int i = 0;
-        if (callInfo.contains("-print")) {
-            i += 1;
-        }
 
         String customer     = (String) callInfo.get(i++);
         String callerNumber = (String) callInfo.get(i++);
@@ -475,9 +468,6 @@ public class Project3 {
     private static void printCall(ArrayList callInfo){
 
         int i = 1;
-        if (callInfo.contains("-textFile")){
-            i += 2;
-        }
 
         String callerNumber = (String) callInfo.get(i++);
         String calleeNumber = (String) callInfo.get(i++);
