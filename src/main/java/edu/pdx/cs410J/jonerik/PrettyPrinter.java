@@ -24,7 +24,7 @@ public class PrettyPrinter implements PhoneBillDumper {
     /**
      * Constructor for the PrettyPrinter
      * @param call takes in a stream from
-     * Project4 and uses the stream in dump
+     * Project3 and uses the stream in dump
      */
     public PrettyPrinter(DataOutputStream call) {
         this.call = call;

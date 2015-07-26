@@ -27,7 +27,7 @@ import java.text.SimpleDateFormat;
  */
 
 
-public class Project4 {
+public class Project3 {
 
     /**
      * These booleans are helpers to simplify
@@ -36,11 +36,11 @@ public class Project4 {
      * to support pretty print without a class
      * global.
      */
-    static String prettyFile   = "";
-    static String textFile     = "";
-    static boolean prettify    = false;
-    static boolean console     = false;
-    static boolean textFileOption    = false;
+    static String prettyFile        = "";
+    static String textFile          = "";
+    static boolean prettify         = false;
+    static boolean console          = false;
+    static boolean textFileOption   = false;
 
     public static void main(String[] args) {
         Class c = AbstractPhoneBill.class;  // Refer to one of Dave's classes so that we can be sure it is on the classpath
