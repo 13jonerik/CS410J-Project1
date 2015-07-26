@@ -37,6 +37,7 @@ public class Project4 {
      * global.
      */
     static String prettyFile   = "";
+    static String textFile     = "";
     static boolean prettify    = false;
     static boolean console     = false;
     static boolean textFileOption    = false;
@@ -45,17 +46,8 @@ public class Project4 {
         Class c = AbstractPhoneBill.class;  // Refer to one of Dave's classes so that we can be sure it is on the classpath
 
         ArrayList arguments = new ArrayList<String>(Arrays.asList(args));
-        if (arguments.contains("-pretty")) {
-            prettyFile  = (String) arguments.get(1);
-            if (prettyFile.equals("-")) { console = true; }
-            prettify    = true;
-            arguments.remove(0);
-            arguments.remove(0);
-        }
 
-        if (arguments.contains("-textFile")) {
-            textFileOption = true;
-        }
+        arguments = setArgs(arguments);
 
         checkZeroArgs(arguments);
         checkForReadMe(arguments);
@@ -71,6 +63,29 @@ public class Project4 {
 
         System.exit(0);
     }
+
+
+
+
+    public static ArrayList setArgs(ArrayList args) {
+        if (args.contains("-textFile")) {
+            textFile = (String) args.get(1);
+            args.remove(0);
+            args.remove(0);
+        }
+
+        if (args.contains("-pretty")) {
+            prettyFile = (String) args.get(1);
+            if (prettyFile.equals("-")) { console = true; }
+            args.remove(0);
+            args.remove(0);
+            prettify = true;
+        }
+
+        return args;
+
+    }
+
 
 
     /**
