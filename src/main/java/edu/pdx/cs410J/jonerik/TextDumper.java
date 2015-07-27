@@ -68,7 +68,6 @@ public class TextDumper implements PhoneBillDumper {
           for (int i = 0; i < length; i++) {
               for (int j = i + 1; j < length; j++) {
                   if (temp.get(i).compareTo(temp.get(j)) == 0) {
-                      System.out.println("Reaching here");
                       temp.remove(temp.get(i));
                       --length;
                       removeDuplicates(temp, length);
