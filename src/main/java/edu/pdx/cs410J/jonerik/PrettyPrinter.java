@@ -45,16 +45,19 @@ public class PrettyPrinter implements PhoneBillDumper {
         call.writeBytes("\n\n");
 
         List<PhoneCall> temp = (List<PhoneCall>) bill.getPhoneCalls();
-        int length = temp.size();
-        temp = removeDuplicates(temp, length);
+        //int length = temp.size();
+        //temp = removeDuplicates(temp, length);
 
         Collections.sort(temp);
 
-        formatString = "%-15s %-5s %-10s %-5s %-15s %-5s %-13s %-18s %s%n";
+        int length = temp.size();
+        temp = removeDuplicates(temp, length);
+
+        formatString = "%-15s %-5s %-10s %-5s %-16s %-6s %-15s %-18s %s%n";
 
         call.writeBytes(String.format(formatString, "    Caller", "|", "Callee", "|", "Start Time", "|", "End Time", "|", "Duration"));
         call.writeBytes("-------------------------------------------------------"
-                + "---------------------------------------------------------------\n");
+                + "------------------------------------------------------------------\n");
 
 
         formatString = "%-15s %-2s %-13s %-2s %-18s %-2s %-16s %-2s %s%n";
@@ -71,7 +74,7 @@ public class PrettyPrinter implements PhoneBillDumper {
                     each.getStartTimeString(), "|", each.getEndTimeString(), "|",
                     " -> Duration: " + durationHours + " Hours and " + durationMins + " minutes!"));
             call.writeBytes("---------------------------------------------------------------------------" +
-                    "-------------------------------------------\n");
+                    "----------------------------------------------\n");
         }
 
 
@@ -90,24 +93,20 @@ public class PrettyPrinter implements PhoneBillDumper {
 
         List<PhoneCall> temp = (List<PhoneCall>) bill.getPhoneCalls();
 
+        Collections.sort(temp);
         int length = temp.size();
-
         temp = removeDuplicates(temp, length);
 
-        Collections.sort(temp);
 
-        formatString = "%-15s %-5s %-10s %-5s %-15s %-5s %-13s %-18s %s%n";
-
+        formatString = "%-15s %-5s %-10s %-5s %-16s %-6s %-15s %-18s %s%n";
         Print(String.format(formatString, "    Caller", "|", "Callee", "|", "Start Time", "|", "End Time", "|", "Duration"));
-
         Print("----------------------------------------------------------------"
-                + "------------------------------------------------------\n");
-
+                + "---------------------------------------------------------\n");
         formatString = "%-15s %-2s %-13s %-2s %-18s %-2s %-16s %-2s %s%n";
 
         for (AbstractPhoneCall each : temp) {
 
-            String parse = String.valueOf(each);
+
             Long duration = Math.abs(each.getStartTime().getTime() - each.getEndTime().getTime());
 
             Long durationHours      = TimeUnit.MILLISECONDS.toHours(duration);
@@ -119,7 +118,7 @@ public class PrettyPrinter implements PhoneBillDumper {
                     each.getStartTimeString(), "|", each.getEndTimeString(), "|",
                     " -> Duration: " + durationHours + " Hours and " + durationMins + " minutes!"));
             Print("--------------------------------------------------------------"
-                    + "--------------------------------------------------------\n");
+                    + "-----------------------------------------------------------\n");
         }
 
     }
@@ -131,10 +130,11 @@ public class PrettyPrinter implements PhoneBillDumper {
      * number.
      */
     public List<PhoneCall> removeDuplicates(List<PhoneCall> temp, int length) {
-        if (length > 1) {
+        if (length > 0) {
             for (int i = 0; i < length; i++) {
                 for (int j = i + 1; j < length; j++) {
                     if (temp.get(i).compareTo(temp.get(j)) == 0) {
+                        System.out.println("Reaching here");
                         temp.remove(temp.get(i));
                         --length;
                         removeDuplicates(temp, length);
@@ -143,6 +143,7 @@ public class PrettyPrinter implements PhoneBillDumper {
                 }
             }
             return temp;
+
         } else {
             return temp;
         }

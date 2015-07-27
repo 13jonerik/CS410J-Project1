@@ -74,6 +74,7 @@ public class Project3 {
             textFile = (String) args.get(i+1);
             args.remove(i);
             args.remove(i);
+            textFileOption = true;
         }
 
         if (args.contains("-pretty")) {
@@ -318,6 +319,7 @@ public class Project3 {
                             " and try running again. ");
                 }
 
+
                 stream = new DataOutputStream(new FileOutputStream(fileName));
                 TextDumper dumper = new TextDumper(stream);
                 dumper.dump(bill);
@@ -354,7 +356,6 @@ public class Project3 {
     public static void writeToEmptyFile(File file, String fileName, PhoneCall addCall, String args) {
 
         PhoneBill newBill = new PhoneBill(args);
-
         DataOutputStream stream;
         DataOutputStream prettyPrintStream;
 
